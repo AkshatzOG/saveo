@@ -1,182 +1,221 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="Savio — Download videos, audio and photos from YouTube, Instagram, Reddit, Pinterest, Facebook and X. Free, fast, no signup required."/>
+<meta name="description" content="Saveo — Download videos, audio and photos/posts from YouTube, Instagram, TikTok, Reddit, Pinterest, Facebook and X. Free, fast, no signup."/>
 <meta name="theme-color" content="#7c3aed"/>
-
-<!-- FAVICON — shows in browser tab, bookmarks, Google search results -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
 <link rel="apple-touch-icon" href="/favicon.svg"/>
-
-<!-- Open Graph — shows preview card when someone shares your URL on WhatsApp/Discord/Twitter -->
-<meta property="og:title" content="Savio — Universal Media Downloader"/>
-<meta property="og:description" content="Download videos, audio and photos from YouTube, Instagram, Reddit, Pinterest, Facebook and X. Free, no signup."/>
+<meta property="og:title" content="Saveo — Universal Media Downloader"/>
+<meta property="og:description" content="Download from YouTube, Instagram, TikTok, Reddit, Pinterest, Facebook and X. Free, no signup."/>
 <meta property="og:type" content="website"/>
-<meta property="og:url" content="https://savio.vercel.app"/>
-<meta property="og:image" content="https://savio.vercel.app/og.png"/>
-<meta name="twitter:card" content="summary_large_image"/>
-
-<title>Savio — Universal Media Downloader</title>
-
+<meta property="og:url" content="https://saveo.pages.dev"/>
+<title>Saveo — Universal Media Downloader</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-:root{
-  --bg:#08080e;--surface:#0f1020;--border:#ffffff12;
-  --text:#f0f0f8;--muted:#94a3b8;--hint:#475569;
-  --violet:#7c3aed;--violet-light:#a78bfa;
-  --cyan:#06b6d4;--green:#22c55e;--red:#f87171;
-}
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:'Syne',system-ui,sans-serif;font-size:15px;min-height:100vh;}
 
-/* NAV */
-nav{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.75rem;border-bottom:1px solid var(--border);background:#08080ecc;position:sticky;top:0;z-index:100;backdrop-filter:blur(14px);}
+/* ── THEME VARIABLES ─────────────────────────────────────────────────────── */
+:root{
+  --bg:#08080e;--surface:#0f1020;--surface2:#161628;
+  --border:#ffffff12;--border2:#ffffff08;
+  --text:#f0f0f8;--muted:#94a3b8;--hint:#475569;
+  --violet:#7c3aed;--violet-light:#a78bfa;--violet-dim:#7c3aed20;
+  --cyan:#06b6d4;--green:#22c55e;--red:#f87171;
+  --card-shadow:0 4px 24px #0008;
+  --input-bg:#0f1020;
+}
+[data-theme="light"]{
+  --bg:#f2f2f8;--surface:#ffffff;--surface2:#f8f8fd;
+  --border:#e0e0ee;--border2:#ebebf8;
+  --text:#111128;--muted:#5a5a80;--hint:#9090b0;
+  --violet:#6d28d9;--violet-light:#7c3aed;--violet-dim:#7c3aed12;
+  --cyan:#0891b2;--green:#16a34a;--red:#dc2626;
+  --card-shadow:0 4px 24px #0001;
+  --input-bg:#ffffff;
+}
+
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Syne',system-ui,sans-serif;font-size:15px;min-height:100vh;transition:background .3s,color .3s;}
+
+/* ── NAV ─────────────────────────────────────────────────────────────────── */
+nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.75rem;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:100;backdrop-filter:blur(16px);}
 .logo{font-size:1.2rem;font-weight:800;letter-spacing:-.05em;display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);}
-.logo svg{flex-shrink:0;}
-.nav-links{display:flex;gap:1.5rem;font-size:.8rem;}
+.nav-right{display:flex;align-items:center;gap:1.25rem;}
+.nav-links{display:flex;gap:1.25rem;font-size:.8rem;}
 .nav-links a{color:var(--muted);text-decoration:none;cursor:pointer;transition:color .2s;}
 .nav-links a:hover{color:var(--text);}
+.theme-btn{background:none;border:1px solid var(--border);color:var(--muted);width:34px;height:34px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.theme-btn:hover{border-color:var(--violet);color:var(--violet-light);}
 
-/* HERO */
+/* ── HERO ────────────────────────────────────────────────────────────────── */
 .hero{padding:4.5rem 1.5rem 2.5rem;max-width:700px;margin:0 auto;text-align:center;}
-.badge{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;color:var(--violet-light);background:#7c3aed1a;border:1px solid #7c3aed35;border-radius:100px;padding:4px 14px;margin-bottom:1.5rem;letter-spacing:.07em;text-transform:uppercase;}
-h1{font-size:clamp(2.2rem,5vw,3.5rem);font-weight:800;line-height:1.05;letter-spacing:-.05em;margin-bottom:1.1rem;}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;color:var(--violet-light);background:var(--violet-dim);border:1px solid #7c3aed35;border-radius:100px;padding:4px 14px;margin-bottom:1.5rem;letter-spacing:.07em;text-transform:uppercase;}
+h1{font-size:clamp(2.2rem,5vw,3.4rem);font-weight:800;line-height:1.05;letter-spacing:-.05em;margin-bottom:1rem;}
 h1 em{font-style:normal;background:linear-gradient(135deg,var(--violet-light),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.subtitle{color:var(--muted);font-size:.975rem;line-height:1.7;margin-bottom:2.25rem;max-width:480px;margin-left:auto;margin-right:auto;}
+.subtitle{color:var(--muted);font-size:.975rem;line-height:1.7;margin-bottom:2.25rem;max-width:500px;margin-left:auto;margin-right:auto;}
 
-/* INPUT CARD */
-.input-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:1.25rem;margin-bottom:.875rem;transition:border-color .3s,box-shadow .3s;}
-.input-card:focus-within{border-color:#7c3aed55;box-shadow:0 0 0 4px #7c3aed0e,0 8px 40px #7c3aed0a;}
+/* ── INPUT CARD ──────────────────────────────────────────────────────────── */
+.input-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:1.25rem;margin-bottom:.875rem;transition:border-color .3s,box-shadow .3s,background .3s;}
+.input-card:focus-within{border-color:#7c3aed55;box-shadow:0 0 0 4px var(--violet-dim);}
 .input-row{display:flex;align-items:center;gap:.75rem;}
 .url-input{flex:1;background:none;border:none;outline:none;font-family:'JetBrains Mono',monospace;font-size:.8125rem;color:var(--text);min-width:0;}
 .url-input::placeholder{color:var(--hint);}
-.paste-btn{background:#ffffff0a;border:1px solid var(--border);color:var(--muted);font-family:'Syne',sans-serif;font-size:.75rem;font-weight:600;padding:6px 13px;border-radius:8px;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0;}
-.paste-btn:hover{background:#ffffff15;color:var(--text);}
-.url-hint{font-size:.72rem;color:var(--violet-light);font-family:'JetBrains Mono',monospace;margin-top:.5rem;min-height:1.1rem;transition:opacity .2s;}
+.paste-btn{background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-family:'Syne',sans-serif;font-size:.75rem;font-weight:600;padding:6px 13px;border-radius:8px;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0;}
+.paste-btn:hover{color:var(--text);border-color:var(--violet);}
+.url-hint{font-size:.72rem;color:var(--violet-light);font-family:'JetBrains Mono',monospace;margin-top:.5rem;min-height:1.1rem;}
 .analyze-btn{width:100%;margin-top:1rem;padding:.9rem;background:var(--violet);border:none;border-radius:11px;color:#fff;font-family:'Syne',sans-serif;font-size:.9375rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
-.analyze-btn:hover{background:#6d28d9;transform:translateY(-1px);box-shadow:0 8px 28px #7c3aed35;}
-.analyze-btn:active{transform:translateY(0);}
+.analyze-btn:hover{background:#6d28d9;transform:translateY(-1px);box-shadow:0 8px 28px #7c3aed40;}
+.analyze-btn:active{transform:none;}
 
-/* SECURITY */
+/* ── SECURITY ROW ────────────────────────────────────────────────────────── */
 .security-row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:.4rem 1rem;font-size:.72rem;color:var(--hint);margin-top:.5rem;}
-.sec-dot{width:5px;height:5px;border-radius:50%;background:var(--green);}
+.sec-dot{width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;}
 
-/* SCAN STATE */
+/* ── SCAN / STATES ───────────────────────────────────────────────────────── */
 .scan-state{padding:1.875rem .5rem;text-align:center;}
-.spin-ring{width:44px;height:44px;border-radius:50%;border:2.5px solid #7c3aed20;border-top-color:var(--violet);animation:spin .75s linear infinite;margin:0 auto 1rem;}
+.spin-ring{width:42px;height:42px;border-radius:50%;border:2.5px solid var(--violet-dim);border-top-color:var(--violet);animation:spin .75s linear infinite;margin:0 auto 1rem;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .scan-label{color:var(--muted);font-size:.875rem;}
 .dots span{animation:blink 1.2s ease-in-out infinite;}
 .dots span:nth-child(2){animation-delay:.4s;}
 .dots span:nth-child(3){animation-delay:.8s;}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:.1;}}
-.scan-url{color:var(--violet-light);font-family:'JetBrains Mono',monospace;font-size:.7rem;margin-top:.5rem;word-break:break-all;opacity:.65;}
-
-/* ERROR */
-.err-box{color:var(--red);font-size:.8125rem;padding:.875rem 1.125rem;background:#ef44441a;border:1px solid #ef444428;border-radius:10px;text-align:center;margin-top:.875rem;line-height:1.7;}
-
-/* DONE */
+.scan-url{color:var(--violet-light);font-family:'JetBrains Mono',monospace;font-size:.7rem;margin-top:.4rem;word-break:break-all;opacity:.65;}
+.err-box{color:var(--red);font-size:.8125rem;padding:.875rem 1.125rem;background:#ef444415;border:1px solid #ef444428;border-radius:10px;text-align:center;margin-top:.875rem;line-height:1.7;}
 .done-msg{text-align:center;padding:1.375rem .5rem;}
-.done-icon{font-size:2.25rem;margin-bottom:.5rem;}
+.done-icon{font-size:2rem;margin-bottom:.5rem;}
 .done-title{color:var(--green);font-weight:700;font-size:1rem;margin-bottom:.375rem;}
 .done-sub{color:var(--muted);font-size:.8125rem;}
-
-/* RESET */
 .reset-btn{background:none;border:1px solid var(--border);color:var(--muted);font-family:'Syne',sans-serif;font-size:.775rem;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all .2s;margin-top:.875rem;}
-.reset-btn:hover{border-color:#ffffff22;color:var(--text);}
+.reset-btn:hover{border-color:var(--violet);color:var(--text);}
 
-/* RESULTS */
-.platform-row{display:flex;align-items:center;gap:10px;padding:.75rem 1rem;background:#ffffff05;border:1px solid var(--border);border-radius:10px;margin-top:.875rem;margin-bottom:1.1rem;font-size:.875rem;font-weight:600;}
+/* ── PREVIEW ─────────────────────────────────────────────────────────────── */
+.preview-wrap{margin-top:.875rem;border-radius:12px;overflow:hidden;border:1px solid var(--border);animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.preview-img-wrap{position:relative;width:100%;aspect-ratio:16/9;background:var(--surface2);overflow:hidden;}
+.preview-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+.preview-plat-card{width:100%;aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;}
+.preview-plat-icon{font-size:2rem;}
+.preview-plat-name{font-weight:700;font-size:1rem;}
+.preview-plat-sub{font-size:.75rem;color:var(--muted);}
+.preview-bar{display:flex;align-items:center;gap:8px;padding:.625rem .875rem;background:var(--surface2);font-size:.78rem;color:var(--muted);border-top:1px solid var(--border);}
+.preview-bar svg{flex-shrink:0;opacity:.6;}
+
+/* ── PLATFORM ROW ────────────────────────────────────────────────────────── */
+.platform-row{display:flex;align-items:center;gap:10px;padding:.75rem 1rem;background:var(--surface2);border:1px solid var(--border);border-radius:10px;margin-top:.875rem;margin-bottom:1rem;font-size:.875rem;font-weight:600;}
 .detected-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;box-shadow:0 0 6px #22c55e80;}
-.tabs{display:flex;gap:4px;background:#ffffff06;border:1px solid var(--border);border-radius:10px;padding:3px;margin-bottom:.875rem;}
+
+/* ── TABS ────────────────────────────────────────────────────────────────── */
+.tabs{display:flex;gap:4px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:3px;margin-bottom:.875rem;}
 .tab{flex:1;padding:7px 10px;border-radius:7px;border:none;background:none;color:var(--muted);font-family:'Syne',sans-serif;font-size:.8125rem;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:5px;}
-.tab.active{background:var(--violet);color:#fff;box-shadow:0 2px 10px #7c3aed35;}
-.tab:not(.active):hover{background:#ffffff0a;color:var(--text);}
-.quality-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:7px;margin-bottom:1rem;}
-.q-btn{padding:10px 12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:#e2e8f0;font-family:'Syne',sans-serif;font-size:.8125rem;font-weight:600;cursor:pointer;transition:all .2s;text-align:left;line-height:1.5;}
-.q-btn:hover{border-color:#7c3aed45;background:#7c3aed08;}
-.q-btn.sel{border-color:var(--violet);background:#7c3aed1a;color:var(--violet-light);}
-.q-sub{font-size:.65rem;color:var(--hint);font-weight:400;display:block;margin-top:2px;}
+.tab.active{background:var(--violet);color:#fff;}
+.tab:not(.active):hover{background:var(--border2);color:var(--text);}
+
+/* ── QUALITY GRID ────────────────────────────────────────────────────────── */
+.quality-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px;margin-bottom:1rem;}
+.q-btn{padding:9px 11px;background:var(--surface);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'Syne',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;text-align:left;line-height:1.5;}
+.q-btn:hover{border-color:#7c3aed60;background:var(--violet-dim);}
+.q-btn.sel{border-color:var(--violet);background:var(--violet-dim);color:var(--violet-light);}
+.q-sub{font-size:.65rem;color:var(--hint);font-weight:400;display:block;margin-top:1px;}
+
+/* ── DOWNLOAD BUTTON ─────────────────────────────────────────────────────── */
 .dl-btn{width:100%;padding:1rem;background:var(--cyan);border:none;border-radius:11px;color:#fff;font-family:'Syne',sans-serif;font-size:.9375rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
-.dl-btn:hover:not(:disabled){filter:brightness(1.08);transform:translateY(-1px);box-shadow:0 8px 28px #06b6d430;}
-.dl-btn:disabled{opacity:.32;cursor:not-allowed;transform:none;box-shadow:none;}
-.prog-wrap{height:3px;background:#ffffff08;border-radius:100px;margin-top:.75rem;overflow:hidden;}
+.dl-btn:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 8px 28px #06b6d440;}
+.dl-btn:disabled{opacity:.3;cursor:not-allowed;transform:none;box-shadow:none;}
+.prog-wrap{height:3px;background:var(--border);border-radius:100px;margin-top:.75rem;overflow:hidden;}
 .prog-bar{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--violet),var(--cyan));transition:width .1s linear;}
 
-/* SECTIONS */
+/* ── SECTIONS ────────────────────────────────────────────────────────────── */
 .section{max-width:920px;margin:0 auto;padding:5rem 1.5rem;}
 .sec-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--violet-light);margin-bottom:.75rem;text-align:center;}
-.sec-title{text-align:center;font-size:clamp(1.5rem,3vw,2.1rem);font-weight:700;letter-spacing:-.04em;margin-bottom:3rem;}
+.sec-title{text-align:center;font-size:clamp(1.5rem,3vw,2rem);font-weight:700;letter-spacing:-.04em;margin-bottom:3rem;}
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
-.step{background:var(--surface);border:1px solid #ffffff07;border-radius:16px;padding:1.875rem;}
-.step-n{font-size:2.75rem;font-weight:800;color:#7c3aed14;letter-spacing:-.06em;margin-bottom:.75rem;line-height:1;}
+.step{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:1.875rem;transition:background .3s;}
+.step-n{font-size:2.75rem;font-weight:800;color:var(--violet-dim);letter-spacing:-.06em;margin-bottom:.75rem;line-height:1;}
 .step-t{font-size:.9375rem;font-weight:700;margin-bottom:.5rem;}
 .step-d{color:var(--muted);font-size:.8125rem;line-height:1.7;}
 .plat-chips{display:flex;flex-wrap:wrap;gap:.875rem;justify-content:center;}
-.plat-chip{display:flex;align-items:center;gap:8px;padding:8px 16px;background:var(--surface);border:1px solid #ffffff09;border-radius:100px;font-size:.8125rem;font-weight:600;transition:all .2s;}
-.plat-chip:hover{border-color:#ffffff1c;transform:translateY(-1px);}
+.plat-chip{display:flex;align-items:center;gap:8px;padding:8px 16px;background:var(--surface);border:1px solid var(--border2);border-radius:100px;font-size:.8125rem;font-weight:600;transition:all .2s;}
+.plat-chip:hover{border-color:var(--border);transform:translateY(-1px);}
 .format-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.75rem;}
-.format-card{background:var(--surface);border:1px solid #ffffff08;border-radius:14px;padding:1.5rem;text-align:center;}
-.format-icon{font-size:1.875rem;margin-bottom:.75rem;}
-.format-t{font-weight:700;font-size:.9rem;margin-bottom:.375rem;}
+.format-card{background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:1.5rem;text-align:center;transition:background .3s;}
+.format-icon{font-size:1.75rem;margin-bottom:.75rem;}
+.format-t{font-weight:700;font-size:.875rem;margin-bottom:.375rem;}
 .format-d{color:var(--muted);font-size:.775rem;line-height:1.65;}
 
-/* FAIR USE */
-.fair-section{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:4rem 1.5rem;}
+/* ── FAQ ─────────────────────────────────────────────────────────────────── */
+.faq-list{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:.75rem;}
+.faq-item{background:var(--surface);border:1px solid var(--border2);border-radius:13px;overflow:hidden;transition:background .3s;}
+.faq-q{width:100%;background:none;border:none;color:var(--text);font-family:'Syne',sans-serif;font-size:.9rem;font-weight:600;padding:1.125rem 1.25rem;text-align:left;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:1rem;transition:color .2s;}
+.faq-q:hover{color:var(--violet-light);}
+.faq-arrow{flex-shrink:0;transition:transform .25s;color:var(--muted);}
+.faq-item.open .faq-arrow{transform:rotate(180deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s;}
+.faq-item.open .faq-a{max-height:200px;padding:0 1.25rem 1.125rem;}
+.faq-a p{color:var(--muted);font-size:.84rem;line-height:1.8;}
+.faq-a a{color:var(--violet-light);text-decoration:none;}
+
+/* ── FAIR USE ─────────────────────────────────────────────────────────────── */
+.fair-section{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:4rem 1.5rem;transition:background .3s;}
 .fair-inner{max-width:660px;margin:0 auto;text-align:center;}
-.fu-icon{font-size:1.5rem;margin-bottom:.75rem;}
 .fu-title{font-size:1.05rem;font-weight:700;color:var(--violet-light);margin-bottom:.875rem;}
 .fu-text{color:var(--muted);font-size:.84rem;line-height:1.9;margin-bottom:1.375rem;}
 .credit-chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;}
-.credit-chip{font-size:.72rem;padding:4px 11px;background:#ffffff07;border:1px solid #ffffff09;border-radius:100px;color:var(--hint);}
+.credit-chip{font-size:.72rem;padding:4px 11px;background:var(--surface2);border:1px solid var(--border2);border-radius:100px;color:var(--hint);}
 
-/* FOOTER */
-footer{text-align:center;padding:2.75rem 1.5rem;color:var(--hint);font-size:.75rem;}
-footer strong{color:var(--muted);}
+/* ── FOOTER ──────────────────────────────────────────────────────────────── */
+footer{text-align:center;padding:2.75rem 1.5rem;color:var(--hint);font-size:.75rem;border-top:1px solid var(--border2);}
 footer a{color:var(--hint);text-decoration:none;}
 footer a:hover{color:var(--muted);}
 .footer-logo{display:flex;align-items:center;justify-content:center;gap:7px;font-size:1rem;font-weight:800;letter-spacing:-.04em;color:var(--muted);margin-bottom:.75rem;}
 
-/* MOBILE */
+/* ── MOBILE ──────────────────────────────────────────────────────────────── */
 @media(max-width:640px){
   .steps,.format-grid{grid-template-columns:1fr;}
-  .nav-links{gap:.875rem;font-size:.75rem;}
+  .nav-links{display:none;}
+  h1{font-size:2rem;}
 }
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
   <a class="logo" href="/">
-    <!-- Inline SVG logo — same as favicon.svg -->
-    <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="32" height="32" rx="8" fill="#08080e"/>
-      <circle cx="10" cy="16" r="4.5" fill="#7c3aed"/>
-      <circle cx="22" cy="16" r="4.5" fill="#06b6d4"/>
-      <rect x="12.5" y="14.5" width="7" height="3" fill="#a78bfa" rx="1"/>
+    <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+      <rect width="32" height="32" rx="8" fill="var(--violet)"/>
+      <circle cx="10" cy="16" r="4.5" fill="#fff" fill-opacity=".9"/>
+      <circle cx="22" cy="16" r="4.5" fill="var(--cyan)"/>
+      <rect x="12.5" y="14.5" width="7" height="3" fill="#fff" fill-opacity=".7" rx="1"/>
     </svg>
-    savio
+    saveo
   </a>
-  <div class="nav-links">
-    <a href="#how">How it works</a>
-    <a href="#platforms">Platforms</a>
-    <a href="#fairuse">Fair use</a>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#platforms">Platforms</a>
+      <a href="#faq">FAQ</a>
+      <a href="#fairuse">Fair use</a>
+    </div>
+    <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">
+      <svg id="themeIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+      </svg>
+    </button>
   </div>
 </nav>
 
+<!-- HERO -->
 <section class="hero">
-  <div class="badge">⚡ Free · No Signup · Personal Use</div>
+  <div class="badge">⚡ Free · No Signup · 7 Platforms</div>
   <h1>Download anything,<br><em>from anywhere.</em></h1>
-  <p class="subtitle">YouTube, Instagram, Reddit, Pinterest, Facebook, X — paste any link, pick your quality. MP4 up to 4K, MP3, full-res photos.</p>
+  <p class="subtitle">YouTube, Instagram, TikTok, Reddit, Pinterest, Facebook, X — paste any link, pick your quality. MP4 up to 4K, MP3, full-res photos.</p>
 
   <div class="input-card">
     <div class="input-row">
-      <input class="url-input" id="urlInput"
-        placeholder="Paste a YouTube, Instagram, Reddit… link"
-        autocomplete="off" spellcheck="false"/>
+      <input class="url-input" id="urlInput" autocomplete="off" spellcheck="false"/>
       <button class="paste-btn" onclick="pasteURL()">Paste</button>
     </div>
     <div id="urlHint" class="url-hint"></div>
@@ -184,6 +223,7 @@ footer a:hover{color:var(--muted);}
   </div>
 
   <div class="security-row">
+    <span class="sec-dot"></span> Cloudflare protected
     <span class="sec-dot"></span> Rate limited
     <span class="sec-dot"></span> No logs stored
     <span class="sec-dot"></span> Local download only
@@ -198,7 +238,7 @@ footer a:hover{color:var(--muted);}
     <div class="step">
       <div class="step-n">01</div>
       <div class="step-t">Paste the link</div>
-      <div class="step-d">Copy any post, video, reel or tweet URL. We detect the source platform automatically — no manual selection needed.</div>
+      <div class="step-d">Copy any post, video, reel or tweet URL. We detect the platform automatically — no manual selection needed.</div>
     </div>
     <div class="step">
       <div class="step-n">02</div>
@@ -208,7 +248,7 @@ footer a:hover{color:var(--muted);}
     <div class="step">
       <div class="step-n">03</div>
       <div class="step-t">Save locally</div>
-      <div class="step-d">Your file downloads directly to your device. We never store, cache or re-host any media on our servers.</div>
+      <div class="step-d">File downloads directly to your device. We never store, cache or re-host any media on our servers.</div>
     </div>
   </div>
 </section>
@@ -216,37 +256,44 @@ footer a:hover{color:var(--muted);}
 <!-- PLATFORMS -->
 <section class="section" id="platforms" style="padding-top:0">
   <div class="sec-label">Supported</div>
-  <div class="sec-title">Six platforms, every format</div>
+  <div class="sec-title">Seven platforms, every format</div>
   <div class="plat-chips" id="platChips"></div>
   <div class="format-grid">
     <div class="format-card">
       <div class="format-icon">🎬</div>
       <div class="format-t">Video — MP4</div>
-      <div class="format-d">Up to 4K 2160p 60fps. All intermediate resolutions including 1080p, 720p, 480p, 360p.</div>
+      <div class="format-d">Up to 4K 2160p 60fps. All resolutions: 1080p, 720p, 480p, 360p, 240p, 144p.</div>
     </div>
     <div class="format-card">
       <div class="format-icon">🎵</div>
       <div class="format-t">Audio — MP3</div>
-      <div class="format-d">YouTube audio in 320, 256, 192, 128 and 64 kbps. Extracted cleanly from source.</div>
+      <div class="format-d">YouTube audio in 320, 256, 192, 128 and 64 kbps. Extracted cleanly.</div>
     </div>
     <div class="format-card">
       <div class="format-icon">🖼️</div>
-      <div class="format-t">Photos — PNG / JPG</div>
+      <div class="format-t">Photos/Posts — PNG / JPG</div>
       <div class="format-d">Full original resolution from Instagram, Pinterest, Reddit and Facebook posts.</div>
     </div>
   </div>
 </section>
 
+<!-- FAQ -->
+<section class="section" id="faq" style="padding-top:0">
+  <div class="sec-label">Questions</div>
+  <div class="sec-title">Frequently asked</div>
+  <div class="faq-list" id="faqList"></div>
+</section>
+
 <!-- FAIR USE -->
 <div class="fair-section" id="fairuse">
   <div class="fair-inner">
-    <div class="fu-icon">⚖️</div>
-    <div class="fu-title">Fair Use & Creator Credits</div>
-    <p class="fu-text">Savio is a personal-use tool. All downloaded content remains the intellectual property of its original creators and the respective platforms. We do not host, redistribute or monetize any downloaded media. Please respect creator rights — only download content you have permission to save. Support creators by watching on their platforms.</p>
+    <div class="fu-title">⚖️ Fair Use &amp; Creator Credits</div>
+    <p class="fu-text">Saveo is a personal-use tool. All downloaded content remains the intellectual property of its original creators and the respective platforms. We do not host, redistribute or monetize any downloaded media. Please respect creator rights — only download content you have permission to save.</p>
     <div class="credit-chips">
       <div class="credit-chip">© YouTube LLC</div>
       <div class="credit-chip">© Meta — Instagram</div>
       <div class="credit-chip">© Meta — Facebook</div>
+      <div class="credit-chip">© TikTok Ltd.</div>
       <div class="credit-chip">© Reddit Inc.</div>
       <div class="credit-chip">© Pinterest Inc.</div>
       <div class="credit-chip">© X Corp.</div>
@@ -256,173 +303,323 @@ footer a:hover{color:var(--muted);}
 
 <footer>
   <div class="footer-logo">
-    <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
-      <rect width="32" height="32" rx="8" fill="#0f1020"/>
-      <circle cx="10" cy="16" r="4.5" fill="#7c3aed"/>
-      <circle cx="22" cy="16" r="4.5" fill="#06b6d4"/>
-      <rect x="12.5" y="14.5" width="7" height="3" fill="#a78bfa" rx="1"/>
+    <svg width="18" height="18" viewBox="0 0 32 32" fill="none">
+      <rect width="32" height="32" rx="8" fill="var(--violet)"/>
+      <circle cx="10" cy="16" r="4.5" fill="#fff" fill-opacity=".9"/>
+      <circle cx="22" cy="16" r="4.5" fill="var(--cyan)"/>
+      <rect x="12.5" y="14.5" width="7" height="3" fill="#fff" fill-opacity=".7" rx="1"/>
     </svg>
-    savio
+    saveo
   </div>
   Personal use only · Content belongs to original creators<br>
   <span style="margin-top:.5rem;display:block;">
-    <a href="#">Privacy</a> &nbsp;·&nbsp; <a href="#">Terms</a> &nbsp;·&nbsp; Built by Akshat
+    <a href="#">Privacy</a> &nbsp;·&nbsp; <a href="#">Terms</a>
   </span>
 </footer>
 
 <script>
-const PLATFORMS = {
-  youtube:{name:"YouTube",domains:["youtube.com","youtu.be","m.youtube.com"],
-    video:["4K 2160p 60fps","4K 2160p","1080p 60fps","1080p","720p 60fps","720p","480p","360p","240p","144p"],
-    audio:["320 kbps","256 kbps","192 kbps","128 kbps","64 kbps"],photo:[]},
-  instagram:{name:"Instagram",domains:["instagram.com"],
-    video:["1080p","720p","480p","360p"],audio:[],
-    photo:["PNG Original","JPG High Quality","JPG Standard"]},
-  facebook:{name:"Facebook",domains:["facebook.com","fb.com","fb.watch","m.facebook.com"],
-    video:["1080p HD","720p","480p","360p","240p"],audio:[],
-    photo:["PNG Original","JPG High Quality","JPG Standard"]},
-  reddit:{name:"Reddit",domains:["reddit.com","redd.it","v.redd.it"],
-    video:["1080p","720p","480p","360p"],audio:[],
-    photo:["PNG Original","JPG High Quality"]},
-  pinterest:{name:"Pinterest",domains:["pinterest.com","pin.it","pinterest.co.uk","pinterest.com.au","pinterest.ca"],
-    video:["1080p","720p","480p"],audio:[],
-    photo:["PNG Original","JPG High Quality","JPG Standard"]},
-  twitter:{name:"X (Twitter)",domains:["twitter.com","x.com","t.co"],
-    video:["1080p","720p","480p","360p"],audio:[],
-    photo:["PNG Original","JPG High Quality"]}
+// ─── CONFIG ──────────────────────────────────────────────────────────────────
+// After deploying your Cloudflare Worker, paste its URL here:
+const WORKER_URL = 'YOUR_WORKER_URL_HERE';
+// Example: const WORKER_URL = 'https://saveo-worker.yourname.workers.dev';
+
+// ─── PLATFORMS ───────────────────────────────────────────────────────────────
+const P = {
+  youtube:  { name:'YouTube',    domains:['youtube.com','youtu.be','m.youtube.com'],   video:['4K 2160p 60fps','4K 2160p','1080p 60fps','1080p','720p 60fps','720p','480p','360p','240p','144p'], audio:['320 kbps','256 kbps','192 kbps','128 kbps','64 kbps'], photo:[] },
+  instagram:{ name:'Instagram',  domains:['instagram.com'],                             video:['1080p','720p','480p','360p'], audio:[], photo:['PNG Original','JPG High','JPG Standard'] },
+  tiktok:   { name:'TikTok',     domains:['tiktok.com','vm.tiktok.com','vt.tiktok.com'],video:['1080p','720p','480p','360p'], audio:['MP3 Original'], photo:[] },
+  facebook: { name:'Facebook',   domains:['facebook.com','fb.com','fb.watch','m.facebook.com'], video:['1080p HD','720p','480p','360p','240p'], audio:[], photo:['PNG Original','JPG High','JPG Standard'] },
+  reddit:   { name:'Reddit',     domains:['reddit.com','redd.it','v.redd.it'],          video:['1080p','720p','480p','360p'], audio:[], photo:['PNG Original','JPG High'] },
+  pinterest:{ name:'Pinterest',  domains:['pinterest.com','pin.it','pinterest.co.uk','pinterest.com.au','pinterest.ca'], video:['1080p','720p','480p'], audio:[], photo:['PNG Original','JPG High','JPG Standard'] },
+  twitter:  { name:'X (Twitter)',domains:['twitter.com','x.com','t.co'],                video:['1080p','720p','480p','360p'], audio:[], photo:['PNG Original','JPG High'] },
 };
 
-const ICONS={
-  youtube:`<svg viewBox="0 0 24 24" width="15" height="15" fill="#FF0000"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6a3 3 0 00-2.1 2.1C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.5 15.6V8.4L15.8 12z"/></svg>`,
-  instagram:`<svg viewBox="0 0 24 24" width="15" height="15"><defs><linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FFDC80"/><stop offset="40%" stop-color="#E1306C"/><stop offset="100%" stop-color="#833AB4"/></linearGradient></defs><path fill="url(#ig)" d="M12 2.2c3.2 0 3.6 0 4.9.1 3.2.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.9.1s-3.6 0-4.8-.1C3.9 21.6 2.4 20 2.3 16.8 2.2 15.5 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 4 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2M12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7C8.3 24 8.7 24 12 24s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 100 12.4A6.2 6.2 0 0012 5.8zm0 10.2a4 4 0 110-8 4 4 0 010 8zm6.4-11.8a1.4 1.4 0 100 2.9 1.4 1.4 0 000-2.9z"/></svg>`,
-  facebook:`<svg viewBox="0 0 24 24" width="15" height="15" fill="#1877F2"><path d="M24 12a12 12 0 10-13.9 11.9v-8.4H7.1V12h3V9.4c0-3 1.8-4.6 4.5-4.6 1.3 0 2.7.2 2.7.2v2.9h-1.5c-1.5 0-1.9.9-1.9 1.9V12h3.3l-.5 3.5h-2.7v8.4A12 12 0 0024 12z"/></svg>`,
-  reddit:`<svg viewBox="0 0 24 24" width="15" height="15" fill="#FF4500"><path d="M12 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm5.1 13.7a1.3 1.3 0 01-2.6 0 1.3 1.3 0 012.6 0zm-8.8 0a1.3 1.3 0 01-2.6 0 1.3 1.3 0 012.6 0zM12 17c-1.7 0-3-.7-3.8-1.7l1.2-.8c.5.6 1.4 1 2.6 1s2.1-.4 2.6-1l1.2.8C15 16.3 13.7 17 12 17zm7.4-10.4a1.4 1.4 0 00-1.4 1A5.5 5.5 0 0014 7.1a1.4 1.4 0 00-2.8 0 7.8 7.8 0 00-4.6 1.5 1.4 1.4 0 10-1.8 2.1c0 .4-.1.9-.1 1.3a5.5 5.5 0 005.3 5.5A5.5 5.5 0 0017.5 12c0-.5 0-.9-.1-1.3a1.4 1.4 0 001.4-1.4 1.4 1.4 0 00-1.4-1.7z"/></svg>`,
-  pinterest:`<svg viewBox="0 0 24 24" width="15" height="15" fill="#E60023"><path d="M12 0C5.4 0 0 5.4 0 12c0 5.1 3.2 9.5 7.8 11.3-.1-1-.2-2.5.1-3.6.3-1 1.8-7.5 1.8-7.5s-.5-.9-.5-2.3c0-2.2 1.3-3.8 2.8-3.8 1.3 0 2 1 2 2.2 0 1.3-.8 3.3-1.3 5.2-.4 1.5.7 2.8 2.2 2.8 2.7 0 4.8-2.8 4.8-6.9 0-3.6-2.6-6.1-6.3-6.1-4.3 0-6.8 3.2-6.8 6.5 0 1.3.5 2.6 1.1 3.4.1.1.1.3.1.4-.1.5-.4 1.5-.4 1.7-.1.3-.2.3-.5.2-1.9-.9-3.1-3.6-3.1-5.9 0-4.8 3.5-9.2 10-9.2 5.3 0 9.4 3.7 9.4 8.7 0 5.2-3.3 9.3-7.8 9.3-1.5 0-3-.8-3.5-1.7l-.9 3.5c-.3 1.3-1.2 2.9-1.8 3.9.7.2 1.3.3 2 .3 6.6 0 12-5.4 12-12S18.6 0 12 0z"/></svg>`,
-  twitter:`<svg viewBox="0 0 24 24" width="15" height="15" fill="#e2e8f0"><path d="M18.2 2h3.5l-7.7 8.8L23 22h-7l-5.5-7.2L4.1 22H.6l8.2-9.4L1 2h7.2l5 6.6L18.2 2zm-1.2 18h1.9L7.1 4H5L17 20z"/></svg>`
+const ICONS = {
+  youtube:  `<svg viewBox="0 0 24 24" width="16" height="16" fill="#FF0000"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6a3 3 0 00-2.1 2.1C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.5 15.6V8.4L15.8 12z"/></svg>`,
+  instagram:`<svg viewBox="0 0 24 24" width="16" height="16"><defs><linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FFDC80"/><stop offset="40%" stop-color="#E1306C"/><stop offset="100%" stop-color="#833AB4"/></linearGradient></defs><path fill="url(#ig)" d="M12 2.2c3.2 0 3.6 0 4.9.1 3.2.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.9.1s-3.6 0-4.8-.1C3.9 21.6 2.4 20 2.3 16.8 2.2 15.5 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 4 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2M12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7C8.3 24 8.7 24 12 24s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 100 12.4A6.2 6.2 0 0012 5.8zm0 10.2a4 4 0 110-8 4 4 0 010 8zm6.4-11.8a1.4 1.4 0 100 2.9 1.4 1.4 0 000-2.9z"/></svg>`,
+  tiktok:   `<svg viewBox="0 0 24 24" width="16" height="16"><path fill="#ff0050" d="M19.6 3.3A4.5 4.5 0 0115.2 0h-3.2v16.4a2.7 2.7 0 01-2.7 2.3 2.7 2.7 0 01-2.7-2.7 2.7 2.7 0 012.7-2.7c.3 0 .5 0 .8.1V10a6 6 0 00-.8-.1 6 6 0 00-6 6 6 6 0 006 6 6 6 0 006-6V8.2a7.8 7.8 0 004.6 1.5V6.4a4.5 4.5 0 01-2.3-.9 4.5 4.5 0 01-2.3.9 4.5 4.5 0 002.3-3.1z"/></svg>`,
+  facebook: `<svg viewBox="0 0 24 24" width="16" height="16" fill="#1877F2"><path d="M24 12a12 12 0 10-13.9 11.9v-8.4H7.1V12h3V9.4c0-3 1.8-4.6 4.5-4.6 1.3 0 2.7.2 2.7.2v2.9h-1.5c-1.5 0-1.9.9-1.9 1.9V12h3.3l-.5 3.5h-2.7v8.4A12 12 0 0024 12z"/></svg>`,
+  reddit:   `<svg viewBox="0 0 24 24" width="16" height="16" fill="#FF4500"><path d="M12 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm5.1 13.7a1.3 1.3 0 01-2.6 0 1.3 1.3 0 012.6 0zm-8.8 0a1.3 1.3 0 01-2.6 0 1.3 1.3 0 012.6 0zM12 17c-1.7 0-3-.7-3.8-1.7l1.2-.8c.5.6 1.4 1 2.6 1s2.1-.4 2.6-1l1.2.8C15 16.3 13.7 17 12 17zm7.4-9.8a1.4 1.4 0 00-1.4 1.4c0 .2 0 .4.1.6A5.5 5.5 0 0014 7.1 1.4 1.4 0 0012.6 5.7 1.4 1.4 0 0011.2 7.1a5.5 5.5 0 00-4.1 2.1 1.4 1.4 0 00-.7-.2A1.4 1.4 0 005 10.4a1.4 1.4 0 001 1.3c0 .4-.1.9-.1 1.3A5.5 5.5 0 0011.4 18.5 5.5 5.5 0 0017.5 13c0-.4 0-.9-.1-1.3a1.4 1.4 0 001-1.3 1.4 1.4 0 00-1.4-1.4z"/></svg>`,
+  pinterest:`<svg viewBox="0 0 24 24" width="16" height="16" fill="#E60023"><path d="M12 0C5.4 0 0 5.4 0 12c0 5.1 3.2 9.5 7.8 11.3-.1-1-.2-2.5.1-3.6.3-1 1.8-7.5 1.8-7.5s-.5-.9-.5-2.3c0-2.2 1.3-3.8 2.8-3.8 1.3 0 2 1 2 2.2 0 1.3-.8 3.3-1.3 5.2-.4 1.5.7 2.8 2.2 2.8 2.7 0 4.8-2.8 4.8-6.9 0-3.6-2.6-6.1-6.3-6.1-4.3 0-6.8 3.2-6.8 6.5 0 1.3.5 2.6 1.1 3.4.1.1.1.3.1.4-.1.5-.4 1.5-.4 1.7-.1.3-.2.3-.5.2-1.9-.9-3.1-3.6-3.1-5.9 0-4.8 3.5-9.2 10-9.2 5.3 0 9.4 3.7 9.4 8.7 0 5.2-3.3 9.3-7.8 9.3-1.5 0-3-.8-3.5-1.7l-.9 3.5c-.3 1.3-1.2 2.9-1.8 3.9.7.2 1.3.3 2 .3 6.6 0 12-5.4 12-12S18.6 0 12 0z"/></svg>`,
+  twitter:  `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.2 2h3.5l-7.7 8.8L23 22h-7l-5.5-7.2L4.1 22H.6l8.2-9.4L1 2h7.2l5 6.6L18.2 2zm-1.2 18h1.9L7.1 4H5L17 20z"/></svg>`,
 };
 
-let state="idle",selQ=null,activeTab="video",platId=null;
+const PLAT_COLORS = {
+  youtube:'#FF0000',instagram:'#E1306C',tiktok:'#ff0050',
+  facebook:'#1877F2',reddit:'#FF4500',pinterest:'#E60023',twitter:'#94a3b8'
+};
 
-function detectPlatform(url){
-  try{
-    const h=new URL(url).hostname.replace(/^www\./,"");
-    for(const[id,p] of Object.entries(PLATFORMS))
-      if(p.domains.some(d=>h===d||h.endsWith("."+d)))return id;
-  }catch{}return null;
+// ─── ROTATING PLACEHOLDER ─────────────────────────────────────────────────────
+const SAMPLES = [
+  { label:'YouTube video',   url:'https://youtube.com/watch?v=dQw4w9WgXcQ' },
+  { label:'Instagram reel',  url:'https://instagram.com/p/CxYz1234abc' },
+  { label:'TikTok video',    url:'https://tiktok.com/@creator/video/7123456789' },
+  { label:'Reddit post',     url:'https://reddit.com/r/videos/comments/abc123' },
+  { label:'X / Twitter post',url:'https://x.com/user/status/1234567890' },
+  { label:'Pinterest pin',   url:'https://pinterest.com/pin/1234567890' },
+  { label:'Facebook video',  url:'https://facebook.com/watch?v=1234567890' },
+];
+let sampleIdx = 0;
+function rotatePlaceholder() {
+  const inp = document.getElementById('urlInput');
+  if (document.activeElement !== inp && !inp.value) {
+    sampleIdx = (sampleIdx + 1) % SAMPLES.length;
+    inp.placeholder = SAMPLES[sampleIdx].url;
+  }
+}
+document.getElementById('urlInput').placeholder = SAMPLES[0].url;
+setInterval(rotatePlaceholder, 2500);
+
+// ─── THEME ────────────────────────────────────────────────────────────────────
+let theme = localStorage.getItem('saveo-theme') || 'dark';
+document.documentElement.setAttribute('data-theme', theme);
+function toggleTheme() {
+  theme = theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('saveo-theme', theme);
+  const icon = document.getElementById('themeIcon');
+  if (theme === 'light') {
+    icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+  } else {
+    icon.innerHTML = '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
+  }
+}
+if (theme === 'light') {
+  document.getElementById('themeIcon').innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
 }
 
-function render(){
-  const el=document.getElementById("mainArea");
-  if(state==="idle"){
-    el.innerHTML=`<button class="analyze-btn" onclick="analyze()">
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let state = 'idle', selQ = null, activeTab = 'video', platId = null;
+
+function detectPlatform(url) {
+  try {
+    const h = new URL(url).hostname.replace(/^www\./, '');
+    for (const [id, p] of Object.entries(P))
+      if (p.domains.some(d => h === d || h.endsWith('.' + d))) return id;
+  } catch {}
+  return null;
+}
+
+// ─── THUMBNAIL ────────────────────────────────────────────────────────────────
+function getYtId(url) {
+  const m = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+function buildPreviewHTML(url, pid) {
+  if (pid === 'youtube') {
+    const ytId = getYtId(url);
+    if (ytId) {
+      return `<div class="preview-wrap">
+        <div class="preview-img-wrap">
+          <img src="https://img.youtube.com/vi/${ytId}/maxresdefault.jpg"
+               onerror="this.src='https://img.youtube.com/vi/${ytId}/hqdefault.jpg'"
+               alt="Video thumbnail"/>
+        </div>
+        <div class="preview-bar">
+          ${ICONS.youtube}
+          <span>YouTube · ${url.slice(0,52)}${url.length>52?'…':''}</span>
+        </div>
+      </div>`;
+    }
+  }
+  const color = PLAT_COLORS[pid] || '#7c3aed';
+  return `<div class="preview-wrap">
+    <div class="preview-plat-card" style="background:linear-gradient(135deg,${color}18,${color}08);">
+      <div class="preview-plat-icon">${ICONS[pid]}</div>
+      <div class="preview-plat-name">${P[pid].name}</div>
+      <div class="preview-plat-sub">Link detected — select quality below</div>
+    </div>
+    <div class="preview-bar">
+      ${ICONS[pid]}
+      <span>${P[pid].name} · ${url.slice(0,52)}${url.length>52?'…':''}</span>
+    </div>
+  </div>`;
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+function render() {
+  const el = document.getElementById('mainArea');
+  const url = document.getElementById('urlInput').value.trim();
+
+  if (state === 'idle') {
+    el.innerHTML = `<button class="analyze-btn" onclick="analyze()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       Analyze Link</button>`;
     return;
   }
-  if(state==="scanning"){
-    const u=document.getElementById("urlInput").value;
-    el.innerHTML=`<div class="scan-state">
+  if (state === 'scanning') {
+    el.innerHTML = `<div class="scan-state">
       <div class="spin-ring"></div>
       <div class="scan-label">Identifying source<span class="dots"><span>.</span><span>.</span><span>.</span></span></div>
-      <div class="scan-url">${u.slice(0,58)}${u.length>58?"…":""}</div>
-    </div>`;return;
+      <div class="scan-url">${url.slice(0,60)}${url.length>60?'…':''}</div>
+    </div>`;
+    return;
   }
-  if(state==="error"){
-    el.innerHTML=`<div class="err-box">⚠ Couldn't identify this link.<br>Supported: YouTube · Instagram · Facebook · Reddit · Pinterest · X</div>
-    <br><button class="reset-btn" onclick="reset()">Try another link</button>`;return;
+  if (state === 'error') {
+    el.innerHTML = `<div class="err-box">⚠ Couldn't identify this link.<br>Supported: YouTube · Instagram · TikTok · Facebook · Reddit · Pinterest · X</div>
+    <br><button class="reset-btn" onclick="reset()">Try another link</button>`;
+    return;
   }
-  if(state==="done"){
-    el.innerHTML=`<div class="done-msg">
+  if (state === 'done') {
+    el.innerHTML = `<div class="done-msg">
       <div class="done-icon">✅</div>
-      <div class="done-title">Download ready!</div>
+      <div class="done-title">Download complete!</div>
       <div class="done-sub">Check your Downloads folder.</div>
       <button class="reset-btn" onclick="reset()">Download another</button>
-    </div>`;return;
+    </div>`;
+    return;
   }
-  const p=PLATFORMS[platId];
-  const tabs=["video","audio","photo"].filter(t=>p[t].length>0);
-  const qs=p[activeTab]||[];
-  const tIcons={
-    video:`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>`,
-    audio:`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`,
-    photo:`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`
+
+  const p = P[platId];
+  const tabs = ['video','audio','photo'].filter(t => p[t].length > 0);
+  const qs = p[activeTab] || [];
+  const tIcons = {
+    video: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>`,
+    audio: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`,
+    photo: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`
   };
-  const tabHTML=tabs.map(t=>`<button class="tab${activeTab===t?" active":""}" onclick="switchTab('${t}')">${tIcons[t]} ${t}</button>`).join("");
-  const qHTML=qs.map(q=>{const pts=q.split(" ");return`<button class="q-btn${selQ===q?" sel":""}" onclick="selectQ('${q}')">${pts[0]}${pts.slice(1).join(" ")?`<span class="q-sub">${pts.slice(1).join(" ")}</span>`:""}</button>`;}).join("");
-  const dlOff=(!selQ||state==="downloading")?" disabled":"";
-  const dlLbl=state==="downloading"
-    ?`<span class="spin-ring" style="width:15px;height:15px;border-width:2px;margin:0"></span>Downloading…`
-    :`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>${selQ?"Download — "+selQ:"Select a quality above"}`;
-  el.innerHTML=`
+  const tabHTML = tabs.map(t =>
+    `<button class="tab${activeTab===t?' active':''}" onclick="switchTab('${t}')">${tIcons[t]} ${t}</button>`
+  ).join('');
+  const qHTML = qs.map(q => {
+    const pts = q.split(' '); const main = pts[0]; const sub = pts.slice(1).join(' ');
+    return `<button class="q-btn${selQ===q?' sel':''}" onclick="selectQ('${q}')">${main}${sub?`<span class="q-sub">${sub}</span>`:''}</button>`;
+  }).join('');
+
+  const dlOff = (!selQ || state === 'downloading') ? ' disabled' : '';
+  const dlLbl = state === 'downloading'
+    ? `<span class="spin-ring" style="width:15px;height:15px;border-width:2px;margin:0"></span>Downloading…`
+    : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>${selQ?'Download — '+selQ:'Select a quality above'}`;
+
+  el.innerHTML = `
     <div class="platform-row">
       ${ICONS[platId]}<span style="flex:1">${p.name}</span>
       <small style="color:var(--muted);font-size:.72rem">detected</small>
       <div class="detected-dot"></div>
     </div>
-    <div class="tabs">${tabHTML}</div>
+    ${buildPreviewHTML(url, platId)}
+    <div class="tabs" style="margin-top:.875rem">${tabHTML}</div>
     <div class="quality-grid">${qHTML}</div>
     <button class="dl-btn"${dlOff} onclick="startDownload()">${dlLbl}</button>
-    ${state==="downloading"?`<div class="prog-wrap"><div class="prog-bar" id="progBar" style="width:0%"></div></div>`:""}
+    ${state==='downloading'?`<div class="prog-wrap"><div class="prog-bar" id="progBar" style="width:0%"></div></div>`:''}
   `;
 }
 
-async function pasteURL(){
-  try{
-    const t=await navigator.clipboard.readText();
-    document.getElementById("urlInput").value=t;
-    updateHint(t);state="idle";selQ=null;platId=null;render();
-  }catch{alert("Allow clipboard access or paste manually.");}
+// ─── ACTIONS ──────────────────────────────────────────────────────────────────
+async function pasteURL() {
+  try {
+    const t = await navigator.clipboard.readText();
+    document.getElementById('urlInput').value = t;
+    updateHint(t); state='idle'; selQ=null; platId=null; render();
+  } catch { alert('Allow clipboard access or paste manually.'); }
 }
 
-async function analyze(){
-  const url=document.getElementById("urlInput").value.trim();
-  if(!url){document.getElementById("urlInput").focus();return;}
-  state="scanning";selQ=null;platId=null;render();
-  await new Promise(r=>setTimeout(r,1400+Math.random()*700));
-  const id=detectPlatform(url);
-  if(!id){state="error";render();return;}
-  platId=id;
-  const p=PLATFORMS[id];
-  activeTab=p.video.length?"video":p.photo.length?"photo":"audio";
-  state="ready";render();
+async function analyze() {
+  const url = document.getElementById('urlInput').value.trim();
+  if (!url) { document.getElementById('urlInput').focus(); return; }
+  state='scanning'; selQ=null; platId=null; render();
+  await new Promise(r => setTimeout(r, 1200 + Math.random()*600));
+  const id = detectPlatform(url);
+  if (!id) { state='error'; render(); return; }
+  platId = id;
+  const pp = P[id];
+  activeTab = pp.video.length ? 'video' : pp.photo.length ? 'photo' : 'audio';
+  state='ready'; render();
 }
 
-function selectQ(q){if(state==="downloading")return;selQ=q;render();}
-function switchTab(t){if(state==="downloading")return;activeTab=t;selQ=null;render();}
+function selectQ(q)    { if (state==='downloading') return; selQ=q; render(); }
+function switchTab(t)  { if (state==='downloading') return; activeTab=t; selQ=null; render(); }
 
-async function startDownload(){
-  if(!selQ)return;
-  state="downloading";render();
-  // REAL DOWNLOAD — wire to your backend:
-  // const url=document.getElementById("urlInput").value.trim();
-  // const res=await fetch(`/api/download?url=${encodeURIComponent(url)}&quality=${encodeURIComponent(selQ)}&format=${activeTab}`);
-  // const blob=await res.blob();
-  // const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  // a.download=`savio-${Date.now()}.${activeTab==='audio'?'mp3':activeTab==='photo'?'png':'mp4'}`;a.click();
-  let p=0;
-  while(p<100){
-    await new Promise(r=>setTimeout(r,80+Math.random()*55));
-    p=Math.min(p+Math.random()*8+2,100);
-    const b=document.getElementById("progBar");
-    if(b)b.style.width=Math.round(p)+"%";
+async function startDownload() {
+  if (!selQ) return;
+  const url = document.getElementById('urlInput').value.trim();
+
+  // ── REAL DOWNLOAD ────────────────────────────────────────────────────────
+  if (WORKER_URL && WORKER_URL !== 'YOUR_WORKER_URL_HERE') {
+    state='downloading'; render();
+    try {
+      const res = await fetch(
+        `${WORKER_URL}?url=${encodeURIComponent(url)}&quality=${encodeURIComponent(selQ)}&format=${activeTab}`
+      );
+      const data = await res.json();
+      if (!res.ok || data.error) throw new Error(data.error || 'Download failed');
+      // Trigger browser download
+      const a = document.createElement('a');
+      a.href = data.url;
+      a.download = data.filename || `saveo-${Date.now()}`;
+      a.target = '_blank';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      state='done'; render(); return;
+    } catch(err) {
+      document.getElementById('mainArea').insertAdjacentHTML('beforeend',
+        `<div class="err-box" style="margin-top:.75rem">⚠ ${err.message}</div>`);
+      state='ready'; render(); return;
+    }
   }
-  await new Promise(r=>setTimeout(r,250));
-  state="done";render();
+
+  // ── SIMULATED (until Worker is set up) ───────────────────────────────────
+  state='downloading'; render();
+  let prog = 0;
+  while (prog < 100) {
+    await new Promise(r => setTimeout(r, 70 + Math.random()*55));
+    prog = Math.min(prog + Math.random()*9+2, 100);
+    const b = document.getElementById('progBar');
+    if (b) b.style.width = Math.round(prog)+'%';
+  }
+  await new Promise(r => setTimeout(r, 250));
+  state='done'; render();
 }
 
-function reset(){
-  document.getElementById("urlInput").value="";
-  document.getElementById("urlHint").textContent="";
-  state="idle";selQ=null;platId=null;render();
+function reset() {
+  document.getElementById('urlInput').value = '';
+  document.getElementById('urlHint').textContent = '';
+  state='idle'; selQ=null; platId=null; render();
 }
 
-function updateHint(val){
-  const id=detectPlatform(val);
-  document.getElementById("urlHint").textContent=id?"→ "+PLATFORMS[id].name+" detected":"";
+function updateHint(val) {
+  const id = detectPlatform(val);
+  document.getElementById('urlHint').textContent = id ? '→ '+P[id].name+' detected' : '';
 }
 
-document.getElementById("urlInput").addEventListener("input",e=>updateHint(e.target.value));
-document.getElementById("platChips").innerHTML=Object.entries(PLATFORMS).map(([id,p])=>`<div class="plat-chip">${ICONS[id]} ${p.name}</div>`).join("");
+document.getElementById('urlInput').addEventListener('input', e => {
+  updateHint(e.target.value);
+  if (!e.target.value) { state='idle'; selQ=null; platId=null; render(); }
+});
+
+// ─── PLATFORM CHIPS ───────────────────────────────────────────────────────────
+document.getElementById('platChips').innerHTML = Object.entries(P).map(([id, p]) =>
+  `<div class="plat-chip">${ICONS[id]} ${p.name}</div>`
+).join('');
+
+// ─── FAQ ──────────────────────────────────────────────────────────────────────
+const FAQS = [
+  { q:'Is Saveo free to use?', a:'Yes, completely free. No subscription, no account needed, no hidden limits.' },
+  { q:'Do I need to create an account?', a:'No account, no signup, no email required. Paste a link and download. That\'s it.' },
+  { q:'Which platforms are supported?', a:'YouTube, Instagram, TikTok, Facebook, Reddit, Pinterest and X (Twitter). Touch some Grass.' },
+  { q:'What video qualities are available?', a:'Up to 4K/2160p 60fps for YouTube. Most platforms support up to 1080p. Audio goes up to 320kbps MP3. Only qualities that actually exist for the video are shown — no fake options.' },
+  { q:'Is downloading content legal?', a:'For personal offline use, fair use generally applies. Never redistribute, monetize, or claim others\' content as your own. Always respect the original creator.' },
+  { q:'Does Saveo store my downloads?', a:'No. Files go directly from the source platform to your browser. We never see, store or cache your downloaded media on any server.' },
+  { q:'Why isn\'t my link working?', a:'Private videos, age-restricted content, region-locked videos, and deleted posts cannot be downloaded. Make sure the content is publicly accessible before trying.' }
+];
+
+document.getElementById('faqList').innerHTML = FAQS.map((f, i) => `
+  <div class="faq-item" id="faq${i}">
+    <button class="faq-q" onclick="toggleFaq(${i})">
+      ${f.q}
+      <svg class="faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="faq-a"><p>${f.a}</p></div>
+  </div>
+`).join('');
+
+function toggleFaq(i) {
+  const item = document.getElementById('faq'+i);
+  item.classList.toggle('open');
+}
+
 render();
 </script>
 </body>
