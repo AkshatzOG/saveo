@@ -397,7 +397,7 @@ function buildPreviewHTML(pid,previewData,url){
     return `<div class="preview-wrap">
       <div class="preview-thumb">
         <img src="${previewData.thumb}" alt="Thumbnail"
-          onerror="this.style.display='none'"
+          onerror="this.style.display='none'"/>
         <div class="play-overlay">
           <div class="play-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -512,11 +512,19 @@ async function analyze(){
       <div id="tsWrap" style="display:flex;justify-content:center;min-height:65px;"></div>
     </div>`;
     turnstile.render('#tsWrap',{
-      sitekey:TURNSTILE_SITE_KEY,
-      callback:'onTurnstileSuccess',
-      'error-callback':'onTurnstileError',
-      theme:document.documentElement.getAttribute('data-theme')||'dark'
-    });
+  sitekey:TURNSTILE_SITE_KEY,
+  callback:function(token){
+    turnstileToken=token;
+    const gate=document.querySelector('.ts-gate');
+    if(gate)gate.remove();
+    if(pendingAnalyze){pendingAnalyze=false;doAnalyze();}
+  },
+  'error-callback':function(){
+    const gate=document.querySelector('.ts-gate');
+    if(gate)gate.innerHTML='<p style="color:var(--red);font-size:.8rem;text-align:center;padding:.75rem">Verification failed — refresh and try again.</p>';
+  },
+  theme:document.documentElement.getAttribute('data-theme')||'dark'
+  });
     return;
   }
   doAnalyze();
