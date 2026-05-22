@@ -357,7 +357,7 @@ async function fetchPreview(url,pid){
   } else if(pid==='tiktok'||pid==='reddit'){
     // These go through our Worker thumbnail endpoint (avoids CORS)
     try{
-      if(WORKER_URL&&WORKER_URL!=='YOUR_WORKER_URL_HERE'){
+      if(WORKER_URL && WORKER_URL !== 'YOUR_WORKER_URL_HERE'){
         const res=await fetch(`${WORKER_URL}/api/thumbnail?url=${encodeURIComponent(url)}&platform=${pid}`);
         if(res.ok){const d=await res.json();result=d;}
       }
@@ -513,7 +513,7 @@ async function startDownload(){
   if(!selQ)return;
   const url=inp.value.trim();
 
-  if(WORKER_URL&&WORKER_URL!=='YOUR_WORKER_URL_HERE'){
+  if(WORKER_URL && WORKER_URL !== 'YOUR_WORKER_URL_HERE'){
     state='downloading';render();
     try{
       const res=await fetch(`${WORKER_URL}/api/download?url=${encodeURIComponent(url)}&quality=${encodeURIComponent(selQ)}&format=${activeTab}`);
