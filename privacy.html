@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Saveo Privacy Policy — how we handle your data (spoiler: we don't collect any)."/>
+<meta name="theme-color" content="#7c3aed"/>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+<title>Privacy Policy — Saveo</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#08080e;--surface:#0f1020;--surface2:#161628;--border:#ffffff12;--border2:#ffffff08;--text:#f0f0f8;--muted:#94a3b8;--hint:#475569;--violet:#7c3aed;--violet-light:#a78bfa;--violet-dim:#7c3aed20;--cyan:#06b6d4;}
+[data-theme="light"]{--bg:#f2f2f8;--surface:#ffffff;--surface2:#f0f0f8;--border:#e0e0ee;--border2:#ebebf8;--text:#111128;--muted:#5a5a80;--hint:#9090b0;--violet:#6d28d9;--violet-light:#7c3aed;--violet-dim:#7c3aed12;--cyan:#0891b2;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Syne',system-ui,sans-serif;font-size:15px;min-height:100vh;transition:background .3s,color .3s;}
+nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.75rem;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:100;backdrop-filter:blur(16px);}
+.logo{font-size:1.2rem;font-weight:800;letter-spacing:-.05em;display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);}
+.theme-btn{background:none;border:1px solid var(--border);color:var(--muted);width:34px;height:34px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.theme-btn:hover{border-color:var(--violet);color:var(--violet-light);}
+.page{max-width:700px;margin:0 auto;padding:4rem 1.5rem 5rem;}
+.page-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--violet-light);margin-bottom:.75rem;}
+.page-title{font-size:clamp(1.75rem,4vw,2.5rem);font-weight:800;letter-spacing:-.05em;margin-bottom:.75rem;}
+.page-date{font-size:.8rem;color:var(--hint);margin-bottom:3rem;}
+.section{margin-bottom:2.5rem;}
+.section h2{font-size:1rem;font-weight:700;margin-bottom:.875rem;color:var(--text);}
+.section p,.section li{color:var(--muted);font-size:.875rem;line-height:1.85;margin-bottom:.625rem;}
+.section ul{padding-left:1.25rem;display:flex;flex-direction:column;gap:.375rem;}
+.section li{color:var(--muted);font-size:.875rem;line-height:1.7;}
+.highlight-box{background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:1.5rem;margin-bottom:2.5rem;}
+.highlight-box p{color:var(--muted);font-size:.875rem;line-height:1.85;margin:0;}
+.highlight-box strong{color:var(--violet-light);}
+.divider{height:1px;background:var(--border2);margin:2.5rem 0;}
+footer{text-align:center;padding:2.75rem 1.5rem;color:var(--hint);font-size:.75rem;border-top:1px solid var(--border2);}
+footer a{color:var(--hint);text-decoration:none;}
+footer a:hover{color:var(--muted);}
+.footer-logo{display:flex;align-items:center;justify-content:center;gap:7px;font-size:1rem;font-weight:800;letter-spacing:-.04em;color:var(--muted);margin-bottom:.75rem;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="/">
+    <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+      <rect width="32" height="32" rx="8" fill="var(--violet)"/>
+      <circle cx="10" cy="16" r="4.5" fill="#fff" fill-opacity=".9"/>
+      <circle cx="22" cy="16" r="4.5" fill="var(--cyan)"/>
+      <rect x="12.5" y="14.5" width="7" height="3" fill="#fff" fill-opacity=".7" rx="1"/>
+    </svg>
+    saveo
+  </a>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">
+    <svg id="themeIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+    </svg>
+  </button>
+</nav>
+
+<div class="page">
+  <div class="page-label">Legal</div>
+  <h1 class="page-title">Privacy Policy</h1>
+  <div class="page-date">Last updated: May 2026</div>
+
+  <div class="highlight-box">
+    <p><strong>Short version:</strong> Saveo does not collect, store, or sell any personal data. We don't know who you are, what you download, or where you're from. This policy exists to be transparent about that.</p>
+  </div>
+
+  <div class="section">
+    <h2>1. Who we are</h2>
+    <p>Saveo is a free, personal-use media downloader available at <strong>saveo.pages.dev</strong>. It is an independent project, not affiliated with any of the platforms it supports (YouTube, Instagram, TikTok, Facebook, Reddit, Pinterest, X).</p>
+  </div>
+
+  <div class="section">
+    <h2>2. What we do NOT collect</h2>
+    <ul>
+      <li>No names, emails, or account information — there is no login</li>
+      <li>No IP addresses stored or logged</li>
+      <li>No download history — we don't record what URLs you paste</li>
+      <li>No cookies set by Saveo itself</li>
+      <li>No analytics or tracking scripts</li>
+      <li>No device fingerprinting</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>3. How downloads work</h2>
+    <p>When you paste a link and click Download, your request travels through our Cloudflare Worker backend which contacts a third-party extraction service (Cobalt) to retrieve the media URL. The file is then streamed directly from the source platform's servers to your browser.</p>
+    <p>We act purely as a proxy. We do not store the media file, the URL you submitted, or any metadata about your download on any server we control.</p>
+  </div>
+
+  <div class="section">
+    <h2>4. Third-party services</h2>
+    <p>Saveo relies on the following third parties to function. Each has their own privacy policy:</p>
+    <ul>
+      <li><strong>Cloudflare</strong> — hosts this website and our backend Worker. Cloudflare may process request metadata (IP address, request path) per their infrastructure privacy policy at cloudflare.com/privacypolicy</li>
+      <li><strong>Cobalt (api.cobalt.tools)</strong> — the open-source extraction backend that resolves media URLs. Requests include only the URL you submitted.</li>
+      <li><strong>Google Fonts</strong> — loads the Syne typeface. Google may log font requests.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>5. Cookies and local storage</h2>
+    <p>Saveo stores one item in your browser's localStorage: your theme preference (dark or light mode). This never leaves your device and is not transmitted anywhere.</p>
+  </div>
+
+  <div class="section">
+    <h2>6. Content and copyright</h2>
+    <p>Saveo does not host any media. All downloaded content remains the intellectual property of its original creators and the respective platforms. Saveo is intended for personal offline use only. Users are responsible for ensuring their use complies with applicable copyright laws and platform terms of service.</p>
+  </div>
+
+  <div class="section">
+    <h2>7. Children's privacy</h2>
+    <p>Saveo does not knowingly collect data from anyone, including children under 13. Since we collect no data at all, there is nothing to delete or correct regardless of age.</p>
+  </div>
+
+  <div class="section">
+    <h2>8. Changes to this policy</h2>
+    <p>If this policy changes materially, the "Last updated" date at the top will reflect it. We won't notify you directly since we have no way to contact you — which is by design.</p>
+  </div>
+
+  <div class="section">
+    <h2>9. Contact</h2>
+    <p>Questions about this policy? You can reach us via the Saveo GitHub repository or through our community channels.</p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">
+    <svg width="18" height="18" viewBox="0 0 32 32" fill="none">
+      <rect width="32" height="32" rx="8" fill="var(--violet)"/>
+      <circle cx="10" cy="16" r="4.5" fill="#fff" fill-opacity=".9"/>
+      <circle cx="22" cy="16" r="4.5" fill="var(--cyan)"/>
+      <rect x="12.5" y="14.5" width="7" height="3" fill="#fff" fill-opacity=".7" rx="1"/>
+    </svg>
+    saveo
+  </div>
+  <a href="/">← Back to Saveo</a> &nbsp;·&nbsp; <a href="/terms">Terms</a>
+</footer>
+
+<script>
+let theme = localStorage.getItem('saveo-theme') || 'dark';
+document.documentElement.setAttribute('data-theme', theme);
+function toggleTheme() {
+  theme = theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('saveo-theme', theme);
+  const ic = document.getElementById('themeIcon');
+  ic.innerHTML = theme === 'light'
+    ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
+    : '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
+}
+if (theme === 'light') document.getElementById('themeIcon').innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+</script>
+</body>
+</html>
