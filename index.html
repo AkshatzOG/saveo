@@ -8,6 +8,7 @@
 <meta name="google-site-verification" content="oJoehYMV4cEMTXqIJ8Vu_PRP8eRw2AY7URjcSSOBgg4" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
 <link rel="apple-touch-icon" href="/favicon.svg"/>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <meta property="og:title" content="Saveo — Universal Media Downloader"/>
 <meta property="og:description" content="Download from YouTube, Instagram, TikTok, Reddit, Pinterest, Facebook and X. Free, no signup."/>
 <meta property="og:type" content="website"/>
@@ -282,8 +283,10 @@ footer a:hover{color:var(--muted);}
 
 <script>
 // ─── CONFIG — paste your Worker URL here after deploying it ───────────────────
-const WORKER_URL = 'https://saveo-worker.akshatchheda608.workers.dev/';
-// e.g. 'https://saveo-worker.yourname.workers.dev'
+const WORKER_URL = 'https://saveo-worker.akshatchheda608.workers.dev';
+// → Get site key: dash.cloudflare.com > Turnstile > Add site > managed widget
+const TURNSTILE_SITE_KEY = 'YOUR_SITE_KEY_HERE';
+let turnstileToken = null;
 
 // ─── PLATFORMS ────────────────────────────────────────────────────────────────
 const P = {
@@ -394,7 +397,7 @@ function buildPreviewHTML(pid,previewData,url){
     return `<div class="preview-wrap">
       <div class="preview-thumb">
         <img src="${previewData.thumb}" alt="Thumbnail"
-          onerror="this.parentElement.parentElement.innerHTML=buildBrandCard('${pid}','${url}')"/>
+          onerror="this.style.display='none'"
         <div class="play-overlay">
           <div class="play-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -486,11 +489,42 @@ async function pasteURL(){
   }catch{alert('Allow clipboard access or paste manually.');}
 }
 
+let pendingAnalyze=false;
+window.onTurnstileSuccess=function(token){
+  turnstileToken=token;
+  const tw=document.getElementById('tsWrap');
+  if(tw)tw.closest('.ts-gate').remove();
+  if(pendingAnalyze){pendingAnalyze=false;doAnalyze();}
+};
+window.onTurnstileError=function(){
+  const tw=document.getElementById('tsWrap');
+  if(tw){const p=tw.closest('.ts-gate');if(p)p.innerHTML='<p style="color:var(--red);font-size:.8rem;text-align:center;padding:.5rem">Verification failed — refresh and try again.</p>';}
+};
+
 async function analyze(){
   const url=inp.value.trim();
   if(!url){inp.focus();return;}
+  if(!turnstileToken){
+    pendingAnalyze=true;
+    const el=document.getElementById('mainArea');
+    el.innerHTML=`<div class="ts-gate" style="padding:1.125rem 0 .5rem;text-align:center;">
+      <p style="color:var(--muted);font-size:.78rem;margin-bottom:.875rem;">One quick security check</p>
+      <div id="tsWrap" style="display:flex;justify-content:center;min-height:65px;"></div>
+    </div>`;
+    turnstile.render('#tsWrap',{
+      sitekey:TURNSTILE_SITE_KEY,
+      callback:'onTurnstileSuccess',
+      'error-callback':'onTurnstileError',
+      theme:document.documentElement.getAttribute('data-theme')||'dark'
+    });
+    return;
+  }
+  doAnalyze();
+}
+
+async function doAnalyze(){
+  const url=inp.value.trim();
   state='scanning';selQ=null;platId=null;render();
-  // Detect platform
   const id=detectPlatform(url);
   if(!id){
     await new Promise(r=>setTimeout(r,800));
@@ -499,7 +533,6 @@ async function analyze(){
   platId=id;
   const pp=P[id];
   activeTab=pp.video.length?'video':pp.photo.length?'photo':'audio';
-  // Fetch preview while showing scanning state
   await Promise.all([
     fetchPreview(url,id),
     new Promise(r=>setTimeout(r,900))
@@ -517,7 +550,7 @@ async function startDownload(){
   if(WORKER_URL && WORKER_URL !== 'YOUR_WORKER_URL_HERE'){
     state='downloading';render();
     try{
-      const res=await fetch(`${WORKER_URL}/api/download?url=${encodeURIComponent(url)}&quality=${encodeURIComponent(selQ)}&format=${activeTab}`);
+      const res=await fetch(`${WORKER_URL}/api/download?url=${encodeURIComponent(url)}&quality=${encodeURIComponent(selQ)}&format=${activeTab}&ts=${encodeURIComponent(turnstileToken||'')}`);
       const data=await res.json();
       if(!res.ok||data.error)throw new Error(data.error||'Download failed');
       if(data.type==='picker'&&data.picker?.length){
