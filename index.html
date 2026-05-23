@@ -636,7 +636,9 @@ async function startDownload(){
       Your file will save automatically when ready. Don't close this tab.
     </p>`
   );
-  setTimeout(()=>{state='done';render();},180000); // 3 min max then reset
+  // Smart timeout — YouTube HD takes longer than other platforms
+  const waitMs = (platId==='youtube' && activeTab==='video') ? 240000 : 15000;
+  setTimeout(()=>{state='done';render();}, waitMs);
 }
 
 function reset(){inp.value='';document.getElementById('urlHint').textContent='';state='idle';selQ=null;platId=null;render();}
