@@ -582,53 +582,57 @@ function selectQ(q){if(state==='downloading')return;selQ=q;render();}
 function switchTab(t){if(state==='downloading')return;activeTab=t;selQ=null;render();}
 
 async function startDownload(){
-  if(!selQ)return;
+  if(!selQ) return;
   const url=inp.value.trim();
 
-  if(WORKER_URL && WORKER_URL !== 'YOUR_WORKER_URL_HERE'){
-    state='downloading';render();
-    try{
-      const res=await fetch(`${WORKER_URL}/api/download?url=${encodeURIComponent(url)}&quality=${encodeURIComponent(selQ)}&format=${activeTab}&ts=${encodeURIComponent(turnstileToken||'')}`);
-      const data=await res.json();
-      if(!res.ok||data.error)throw new Error(data.error||'Download failed');
-      if(data.type==='picker'&&data.picker?.length){
-        // Multi-photo post — download first item
-        const a=document.createElement('a');
-        a.href=data.picker[0].url;
-        a.download=data.filename||`saveo-${Date.now()}`;
-        a.target='_blank';document.body.appendChild(a);a.click();document.body.removeChild(a);
-      } else {
-        const a=document.createElement('a');
-        a.href=data.url;
-        a.download=data.filename||`saveo-${Date.now()}`;
-        a.target='_blank';document.body.appendChild(a);a.click();document.body.removeChild(a);
-      }
-      state='done';render();return;
-    }catch(err){
-      turnstileToken=null;          // burn used/failed token
-      state='ready';
-      render();                     // rebuild UI first
-      const eb=document.createElement('div');
-      eb.className='err-box';eb.style.marginTop='.75rem';
-      eb.textContent='⚠ '+err.message;
-      document.getElementById('mainArea').appendChild(eb); // then append
-      return;
+  // Token was consumed by previous attempt — re-verify
+  if(!turnstileToken){
+    const el=document.getElementById('mainArea');
+    const existing=el.querySelector('.ts-gate');
+    if(!existing){
+      const gate=document.createElement('div');
+      gate.className='ts-gate';
+      gate.style.cssText='padding:.875rem 0;text-align:center;';
+      gate.innerHTML=`<p style="color:var(--muted);font-size:.78rem;margin-bottom:.75rem;">Re-verify to continue</p><div id="tsWrap" style="display:flex;justify-content:center;min-height:65px;"></div>`;
+      el.appendChild(gate);
+      pendingAnalyze=false;
+      tsWidgetId=turnstile.render('#tsWrap',{
+        sitekey:TURNSTILE_SITE_KEY,
+        callback:function(token){
+          turnstileToken=token;
+          if(tsWidgetId!==null){turnstile.remove(tsWidgetId);tsWidgetId=null;}
+          const g=document.querySelector('.ts-gate');
+          if(g)g.remove();
+          startDownload(); // retry automatically
+        },
+        'error-callback':function(){
+          const g=document.querySelector('.ts-gate');
+          if(g)g.innerHTML='<p style="color:var(--red);font-size:.78rem;text-align:center;padding:.5rem">Verification failed — refresh and try again.</p>';
+        },
+        theme:document.documentElement.getAttribute('data-theme')||'dark'
+      });
     }
+    return;
   }
 
-  // Simulated (remove once Worker is live)
-  state='downloading';render();
-  let prog=0;
-  while(prog<100){
-    await new Promise(r=>setTimeout(r,70+Math.random()*55));
-    prog=Math.min(prog+Math.random()*9+2,100);
-    const b=document.getElementById('progBar');
-    if(b)b.style.width=Math.round(prog)+'%';
-  }
-  await new Promise(r=>setTimeout(r,250));
+  state='downloading'; render();
+
+  // Build Worker URL — Worker validates token then redirects to HF backend
+  const dlUrl=`${WORKER_URL}/api/download?url=${encodeURIComponent(url)}&quality=${encodeURIComponent(selQ)}&format=${activeTab}&ts=${encodeURIComponent(turnstileToken)}`;
+
+  // Clear token immediately — one-time use
   turnstileToken=null;
-      state='done';render();return;
-  state='done';render();
+
+  // Trigger download — browser follows redirect to HF and downloads file directly
+  const a=document.createElement('a');
+  a.href=dlUrl;
+  a.target='_blank';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  // Show done after short delay
+  setTimeout(()=>{state='done';render();},1500);
 }
 
 function reset(){inp.value='';document.getElementById('urlHint').textContent='';state='idle';selQ=null;platId=null;render();}
@@ -640,7 +644,7 @@ document.getElementById('platChips').innerHTML=Object.entries(P).map(([id,p])=>`
 
 // FAQ
 const FAQS=[
-  {q:'Is Saveo completely free?',a:'Yes. No subscription, no account, no hidden limits. We run on Cloudflare\'s free infrastructure which gives unlimited bandwidth for downloads.'},
+  {q:'Is Saveo completely free?',a:'Yes. No subscription, no account, no hidden limits. We\'re committed to keeping Saveo free for everyone.'},
   {q:'Do I need an account?',a:'No account, no signup, no email. Paste a link, pick quality, download. That\'s the whole flow.'},
   {q:'Which platforms are supported?',a:'YouTube, Instagram, TikTok, Facebook, Reddit, Pinterest and X (Twitter). More coming.'},
   {q:'What qualities are available?',a:'YouTube goes up to 4K 2160p 60fps. Most platforms go up to 1080p. Audio up to 320kbps MP3. Only real available qualities are shown — never fake options.'},
@@ -648,7 +652,6 @@ const FAQS=[
   {q:'Is downloading legal?',a:'For personal offline use, fair use generally applies in most regions. Never redistribute, monetize or claim others\' content as your own. Respect the original creator.'},
   {q:'Does Saveo store my files?',a:'No. Downloads stream directly from the source platform to your device via our proxy. We never store, cache or see your downloaded media.'},
   {q:'Why isn\'t my link working?',a:'Private videos, age-restricted content, region-locked videos and deleted posts cannot be downloaded. Make sure the content is publicly accessible.'},
-  {q:'Can I download TikTok without watermark?',a:'We use Cobalt which attempts watermark-free TikTok downloads. Results vary depending on the video and TikTok\'s current API state.'},
 ];
 document.getElementById('faqList').innerHTML=FAQS.map((f,i)=>`
   <div class="faq-item" id="faq${i}">
