@@ -617,28 +617,55 @@ async function startDownload(){
 
   state='downloading'; render();
 
-  // Build Worker URL — Worker validates token then redirects to HF backend
-  const dlUrl=`${WORKER_URL}/api/download?url=${encodeURIComponent(url)}&quality=${encodeURIComponent(selQ)}&format=${activeTab}&ts=${encodeURIComponent(turnstileToken)}`;
+  try {
+    const res = await fetch(dlUrl);
 
-  // Clear token immediately — one-time use
-  turnstileToken=null;
+    // Cobalt picker response (carousels)
+    const ct = res.headers.get('content-type') || '';
+    if (ct.includes('application/json')) {
+      const data = await res.json();
+      if(data.error) throw new Error(data.error);
+      if(data.type === 'picker' && data.picker?.length) {
+        // Download all items in carousel
+        data.picker.forEach((item, i) => {
+          setTimeout(() => {
+            const a = document.createElement('a');
+            a.href = item.url;
+            a.download = item.filename || `saveo-${i+1}.jpg`;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+          }, i * 800);
+        });
+        turnstileToken = null;
+        setTimeout(()=>{state='done';render();}, data.picker.length * 800 + 1000);
+        return;
+      }
+    }
 
-  // Trigger download — browser follows redirect to HF and downloads file directly
-  const a=document.createElement('a');
-  a.href=dlUrl;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  // Keep downloading state — show progress message
-  document.getElementById('mainArea').insertAdjacentHTML('beforeend',
-    `<p style="color:var(--muted);font-size:.78rem;text-align:center;margin-top:.75rem;line-height:1.7;">
-      ⏳ Downloading on server — this takes 1–3 minutes for HD video.<br>
-      Your file will save automatically when ready. Don't close this tab.
-    </p>`
-  );
-  // Smart timeout — YouTube HD takes longer than other platforms
-  const waitMs = (platId==='youtube' && activeTab==='video') ? 240000 : 15000;
-  setTimeout(()=>{state='done';render();}, waitMs);
+    // Redirect-based download (Cobalt CDN or HF stream)
+    // fetch() followed the redirect — if it's a file, trigger download
+    if (res.ok && !ct.includes('application/json')) {
+      const blob = await res.blob();
+      const cdHeader = res.headers.get('content-disposition') || '';
+      const fnMatch = cdHeader.match(/filename="?([^";\n]+)"?/);
+      const filename = fnMatch?.[1] || `saveo-download.${activeTab==='audio'?'mp3':'mp4'}`;
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl; a.download = filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
+    }
+  } catch(err) {
+    turnstileToken = null;
+    state='ready'; render();
+    const eb = document.createElement('div');
+    eb.className='err-box'; eb.style.marginTop='.75rem';
+    eb.textContent = '⚠ ' + err.message;
+    document.getElementById('mainArea').appendChild(eb);
+    return;
+  }
+
+  turnstileToken = null;
+  setTimeout(()=>{state='done';render();}, 2000);
 }
 
 function reset(){inp.value='';document.getElementById('urlHint').textContent='';state='idle';selQ=null;platId=null;render();}
