@@ -490,6 +490,7 @@ async function pasteURL(){
 }
 
 let pendingAnalyze=false;
+let tsWidgetId=null;
 window.onTurnstileSuccess=function(token){
   turnstileToken=token;
   const tw=document.getElementById('tsWrap');
@@ -511,14 +512,15 @@ async function analyze(){
       <p style="color:var(--muted);font-size:.78rem;margin-bottom:.875rem;">One quick security check</p>
       <div id="tsWrap" style="display:flex;justify-content:center;min-height:65px;"></div>
     </div>`;
-    turnstile.render('#tsWrap',{
+    tsWidgetId=turnstile.render('#tsWrap',{
   sitekey:TURNSTILE_SITE_KEY,
   callback:function(token){
     turnstileToken=token;
+    if(tsWidgetId!==null){turnstile.remove(tsWidgetId);tsWidgetId=null;}
     const gate=document.querySelector('.ts-gate');
     if(gate)gate.remove();
     if(pendingAnalyze){pendingAnalyze=false;doAnalyze();}
-  },
+    },
   'error-callback':function(){
     const gate=document.querySelector('.ts-gate');
     if(gate)gate.innerHTML='<p style="color:var(--red);font-size:.8rem;text-align:center;padding:.75rem">Verification failed — refresh and try again.</p>';
@@ -530,21 +532,49 @@ async function analyze(){
   doAnalyze();
 }
 
+// Standard resolutions to keep — filters out 27p/45p/90p/180p junk
+const STANDARD_HEIGHTS = [2160,1440,1080,720,480,360,240,144];
+
 async function doAnalyze(){
   const url=inp.value.trim();
   state='scanning';selQ=null;platId=null;render();
+
   const id=detectPlatform(url);
   if(!id){
     await new Promise(r=>setTimeout(r,800));
     state='error';render();return;
   }
   platId=id;
-  const pp=P[id];
-  activeTab=pp.video.length?'video':pp.photo.length?'photo':'audio';
-  await Promise.all([
+
+  // Fetch preview + real formats simultaneously
+  const [,formatsRes]=await Promise.all([
     fetchPreview(url,id),
+    fetch(`${WORKER_URL}/api/formats?url=${encodeURIComponent(url)}`)
+      .then(r=>r.json()).catch(()=>null),
     new Promise(r=>setTimeout(r,900))
   ]);
+
+  // Override hardcoded quality lists with real ones from backend
+  if(formatsRes&&formatsRes.status==='ok'){
+    // Filter video to standard heights only
+    const filtered=(formatsRes.video||[]).filter(q=>{
+      const m=q.match(/^(\d+)p/);
+      return m&&STANDARD_HEIGHTS.includes(parseInt(m[1]));
+    });
+    P[id]={
+      ...P[id],
+      video: filtered,
+      audio: formatsRes.audio||[],
+      photo: formatsRes.photo||[],
+    };
+    // Update preview title if backend returned one
+    if(formatsRes.title&&previewCache[url]){
+      previewCache[url].title=formatsRes.title;
+    }
+  }
+
+  const pp=P[id];
+  activeTab=pp.video.length?'video':pp.photo.length?'photo':pp.audio.length?'audio':'video';
   state='ready';render();
 }
 
@@ -575,11 +605,14 @@ async function startDownload(){
       }
       state='done';render();return;
     }catch(err){
+      turnstileToken=null;          // burn used/failed token
+      state='ready';
+      render();                     // rebuild UI first
       const eb=document.createElement('div');
       eb.className='err-box';eb.style.marginTop='.75rem';
       eb.textContent='⚠ '+err.message;
-      document.getElementById('mainArea').appendChild(eb);
-      state='ready';render();return;
+      document.getElementById('mainArea').appendChild(eb); // then append
+      return;
     }
   }
 
@@ -593,6 +626,8 @@ async function startDownload(){
     if(b)b.style.width=Math.round(prog)+'%';
   }
   await new Promise(r=>setTimeout(r,250));
+  turnstileToken=null;
+      state='done';render();return;
   state='done';render();
 }
 
