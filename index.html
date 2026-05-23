@@ -617,6 +617,8 @@ async function startDownload(){
 
   state='downloading'; render();
 
+  const dlUrl=`${WORKER_URL}/api/download?url=${encodeURIComponent(url)}&quality=${encodeURIComponent(selQ)}&format=${activeTab}&ts=${encodeURIComponent(turnstileToken||'')}`;
+
   try {
     const res = await fetch(dlUrl);
 
