@@ -626,13 +626,17 @@ async function startDownload(){
   // Trigger download — browser follows redirect to HF and downloads file directly
   const a=document.createElement('a');
   a.href=dlUrl;
-  a.target='_blank';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-
-  // Show done after short delay
-  setTimeout(()=>{state='done';render();},1500);
+  // Keep downloading state — show progress message
+  document.getElementById('mainArea').insertAdjacentHTML('beforeend',
+    `<p style="color:var(--muted);font-size:.78rem;text-align:center;margin-top:.75rem;line-height:1.7;">
+      ⏳ Downloading on server — this takes 1–3 minutes for HD video.<br>
+      Your file will save automatically when ready. Don't close this tab.
+    </p>`
+  );
+  setTimeout(()=>{state='done';render();},180000); // 3 min max then reset
 }
 
 function reset(){inp.value='';document.getElementById('urlHint').textContent='';state='idle';selQ=null;platId=null;render();}
