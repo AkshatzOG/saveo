@@ -293,7 +293,12 @@ let turnstileToken = null;
 
 // ─── PLATFORMS ────────────────────────────────────────────────────────────────
 const P = {
-  youtube:     { name:'YouTube',     domains:['youtube.com','youtu.be','m.youtube.com'],           video:[],audio:[],photo:[],                         },
+  youtube: {
+  name:'YouTube',
+  domains:['youtube.com','youtu.be','m.youtube.com'],
+  video:['4K 2160p 60fps','4K 2160p','1080p 60fps','1080p','720p 60fps','720p','480p','360p','240p','144p'],
+  audio:['320kbps','192kbps','128kbps'],
+  photo:[],},
   tiktok:      { name:'TikTok',      domains:['tiktok.com','vm.tiktok.com','vt.tiktok.com'],       video:[],audio:['MP3 Original'],photo:[],            },
   twitter:     { name:'X (Twitter)', domains:['twitter.com','x.com','t.co'],                       video:[],audio:[],photo:['PNG Original','JPG High'],  },
   reddit:      { name:'Reddit',      domains:['reddit.com','redd.it','v.redd.it'],                  video:[],audio:[],photo:['PNG Original','JPG High'],  },
@@ -584,11 +589,17 @@ async function doAnalyze(){
     state='unavailable';render();return;
   }
 
+  // YouTube: skip slow HF formats call, use hardcoded qualities instantly
+  // Other platforms: fetch real formats from backend
+  const formatsPromise = (id === 'youtube')
+    ? Promise.resolve(null)
+    : fetch(`${WORKER_URL}/api/formats?url=${encodeURIComponent(url)}`)
+        .then(r=>r.json()).catch(()=>null);
+
   const [,formatsRes]=await Promise.all([
     fetchPreview(url,id),
-    fetch(`${WORKER_URL}/api/formats?url=${encodeURIComponent(url)}`)
-      .then(r=>r.json()).catch(()=>null),
-    new Promise(r=>setTimeout(r,800))
+    formatsPromise,
+    new Promise(r=>setTimeout(r,900))
   ]);
 
   if(formatsRes&&formatsRes.status==='ok'){
