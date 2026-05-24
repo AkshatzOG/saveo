@@ -79,6 +79,9 @@ h1 em{font-style:normal;background:linear-gradient(135deg,var(--violet-light),va
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:.1;}}
 .scan-url{color:var(--violet-light);font-family:'JetBrains Mono',monospace;font-size:.7rem;margin-top:.4rem;word-break:break-all;opacity:.65;}
 .err-box{color:var(--red);font-size:.8125rem;padding:.875rem 1.125rem;background:#ef444415;border:1px solid #ef444428;border-radius:10px;text-align:center;margin-top:.875rem;line-height:1.7;}
+.unavail-box{color:var(--muted);font-size:.8125rem;padding:1.25rem;background:var(--surface2);border:1px solid var(--border);border-radius:12px;text-align:center;margin-top:.875rem;line-height:1.8;}
+.unavail-box strong{color:var(--text);}
+.unavail-icon{font-size:1.5rem;display:block;margin-bottom:.5rem;}
 .done-msg{text-align:center;padding:1.375rem .5rem;}
 .done-icon{font-size:2rem;margin-bottom:.5rem;}
 .done-title{color:var(--green);font-weight:700;font-size:1rem;margin-bottom:.375rem;}
@@ -205,9 +208,9 @@ footer a:hover{color:var(--muted);}
 </nav>
 
 <section class="hero">
-  <div class="badge">⚡ Free · No Signup · 7 Platforms</div>
+  <div class="badge">⚡ Free · No Signup · 9 Platforms</div>
   <h1>Download anything,<br><em>from anywhere.</em></h1>
-  <p class="subtitle">YouTube, Instagram, TikTok, Reddit, Pinterest, Facebook, X — paste any link, pick your quality. MP4 up to 4K, MP3, full-res photos.</p>
+  <p class="subtitle">YouTube, TikTok, Reddit, Pinterest, X, Vimeo, SoundCloud and more — paste any link, pick your quality. MP4 up to 4K, MP3, full-res photos.</p>
   <div class="input-card">
     <div class="input-row">
       <input class="url-input" id="urlInput" autocomplete="off" spellcheck="false"/>
@@ -290,16 +293,19 @@ let turnstileToken = null;
 
 // ─── PLATFORMS ────────────────────────────────────────────────────────────────
 const P = {
-  youtube:  {name:'YouTube',   domains:['youtube.com','youtu.be','m.youtube.com'],  video:['4K 2160p 60fps','4K 2160p','1080p 60fps','1080p','720p 60fps','720p','480p','360p','240p','144p'],audio:['320 kbps','256 kbps','192 kbps','128 kbps','64 kbps'],photo:[]},
-  instagram:{name:'Instagram', domains:['instagram.com'],                            video:['1080p','720p','480p','360p'],audio:[],photo:['PNG Original','JPG High','JPG Standard']},
-  tiktok:   {name:'TikTok',    domains:['tiktok.com','vm.tiktok.com','vt.tiktok.com'],video:['1080p','720p','480p','360p'],audio:['MP3 Original'],photo:[]},
-  facebook: {name:'Facebook',  domains:['facebook.com','fb.com','fb.watch','m.facebook.com'],video:['1080p HD','720p','480p','360p','240p'],audio:[],photo:['PNG Original','JPG High','JPG Standard']},
-  reddit:   {name:'Reddit',    domains:['reddit.com','redd.it','v.redd.it'],         video:['1080p','720p','480p','360p'],audio:[],photo:['PNG Original','JPG High']},
-  pinterest:{name:'Pinterest', domains:['pinterest.com','pin.it','pinterest.co.uk','pinterest.com.au','pinterest.ca'],video:['1080p','720p','480p'],audio:[],photo:['PNG Original','JPG High','JPG Standard']},
-  twitter:  {name:'X (Twitter)',domains:['twitter.com','x.com','t.co'],              video:['1080p','720p','480p','360p'],audio:[],photo:['PNG Original','JPG High']},
+  youtube:     { name:'YouTube',     domains:['youtube.com','youtu.be','m.youtube.com'],           video:[],audio:[],photo:[],                         },
+  tiktok:      { name:'TikTok',      domains:['tiktok.com','vm.tiktok.com','vt.tiktok.com'],       video:[],audio:['MP3 Original'],photo:[],            },
+  twitter:     { name:'X (Twitter)', domains:['twitter.com','x.com','t.co'],                       video:[],audio:[],photo:['PNG Original','JPG High'],  },
+  reddit:      { name:'Reddit',      domains:['reddit.com','redd.it','v.redd.it'],                  video:[],audio:[],photo:['PNG Original','JPG High'],  },
+  pinterest:   { name:'Pinterest',   domains:['pinterest.com','pin.it','pinterest.co.uk','pinterest.com.au','pinterest.ca'], video:[],audio:[],photo:['PNG Original','JPG High','JPG Standard'] },
+  vimeo:       { name:'Vimeo',       domains:['vimeo.com'],                                         video:[],audio:[],photo:[],                          },
+  soundcloud:  { name:'SoundCloud',  domains:['soundcloud.com'],                                   video:[],audio:['320kbps','128kbps'],photo:[],        },
+  // Unavailable on free cloud hosting — shown as service notice
+  instagram:   { name:'Instagram',   domains:['instagram.com'],                                     video:[],audio:[],photo:[], unavailable:true         },
+  facebook:    { name:'Facebook',    domains:['facebook.com','fb.com','fb.watch','m.facebook.com'], video:[],audio:[],photo:[], unavailable:true         },
 };
-const PLAT_COLORS={youtube:'#FF0000',instagram:'#E1306C',tiktok:'#010101',facebook:'#1877F2',reddit:'#FF4500',pinterest:'#E60023',twitter:'#1DA1F2'};
-const PLAT_EMOJI={youtube:'▶️',instagram:'📸',tiktok:'🎵',facebook:'📘',reddit:'🤖',pinterest:'📌',twitter:'🐦'};
+const PLAT_COLORS={youtube:'#FF0000',instagram:'#E1306C',tiktok:'#010101',facebook:'#1877F2',reddit:'#FF4500',pinterest:'#E60023',twitter:'#1DA1F2',vimeo:'#1ab7ea', soundcloud:'#ff5500'};
+const PLAT_EMOJI={youtube:'▶️',instagram:'📸',tiktok:'🎵',facebook:'📘',reddit:'🤖',pinterest:'📌',twitter:'🐦',vimeo:'🎬', soundcloud:'🎵'};
 const ICONS={
   youtube:`<svg viewBox="0 0 24 24" width="16" height="16" fill="#FF0000"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6a3 3 0 00-2.1 2.1C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.5 15.6V8.4L15.8 12z"/></svg>`,
   instagram:`<svg viewBox="0 0 24 24" width="16" height="16"><defs><linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FFDC80"/><stop offset="40%" stop-color="#E1306C"/><stop offset="100%" stop-color="#833AB4"/></linearGradient></defs><path fill="url(#ig)" d="M12 2.2c3.2 0 3.6 0 4.9.1 3.2.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.9.1s-3.6 0-4.8-.1C3.9 21.6 2.4 20 2.3 16.8 2.2 15.5 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 4 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2M12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7C8.3 24 8.7 24 12 24s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 100 12.4A6.2 6.2 0 0012 5.8zm0 10.2a4 4 0 110-8 4 4 0 010 8zm6.4-11.8a1.4 1.4 0 100 2.9 1.4 1.4 0 000-2.9z"/></svg>`,
@@ -308,10 +314,20 @@ const ICONS={
   reddit:`<svg viewBox="0 0 24 24" width="16" height="16" fill="#FF4500"><path d="M12 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm5.1 13.7a1.3 1.3 0 01-2.6 0 1.3 1.3 0 012.6 0zm-8.8 0a1.3 1.3 0 01-2.6 0 1.3 1.3 0 012.6 0zM12 17c-1.7 0-3-.7-3.8-1.7l1.2-.8c.5.6 1.4 1 2.6 1s2.1-.4 2.6-1l1.2.8C15 16.3 13.7 17 12 17zm7.4-9.8a1.4 1.4 0 00-1.4 1.4c0 .4.1.8.4 1.1A5.5 5.5 0 0014 7.1a1.4 1.4 0 00-2.8 0 5.5 5.5 0 00-4.6 2.6 1.4 1.4 0 10-1.4 2.4c0 .4-.1.9-.1 1.3a5.5 5.5 0 005.9 5.1 5.5 5.5 0 005.5-5.5c0-.4 0-.9-.1-1.3a1.4 1.4 0 001.4-1.4 1.4 1.4 0 00-1.4-1.1z"/></svg>`,
   pinterest:`<svg viewBox="0 0 24 24" width="16" height="16" fill="#E60023"><path d="M12 0C5.4 0 0 5.4 0 12c0 5.1 3.2 9.5 7.8 11.3-.1-1-.2-2.5.1-3.6.3-1 1.8-7.5 1.8-7.5s-.5-.9-.5-2.3c0-2.2 1.3-3.8 2.8-3.8 1.3 0 2 1 2 2.2 0 1.3-.8 3.3-1.3 5.2-.4 1.5.7 2.8 2.2 2.8 2.7 0 4.8-2.8 4.8-6.9 0-3.6-2.6-6.1-6.3-6.1-4.3 0-6.8 3.2-6.8 6.5 0 1.3.5 2.6 1.1 3.4.1.1.1.3.1.4-.1.5-.4 1.5-.4 1.7-.1.3-.2.3-.5.2-1.9-.9-3.1-3.6-3.1-5.9 0-4.8 3.5-9.2 10-9.2 5.3 0 9.4 3.7 9.4 8.7 0 5.2-3.3 9.3-7.8 9.3-1.5 0-3-.8-3.5-1.7l-.9 3.5c-.3 1.3-1.2 2.9-1.8 3.9.7.2 1.3.3 2 .3 6.6 0 12-5.4 12-12S18.6 0 12 0z"/></svg>`,
   twitter:`<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.2 2h3.5l-7.7 8.8L23 22h-7l-5.5-7.2L4.1 22H.6l8.2-9.4L1 2h7.2l5 6.6L18.2 2zm-1.2 18h1.9L7.1 4H5L17 20z"/></svg>`,
+  vimeo:`<svg viewBox="0 0 24 24" width="16" height="16" fill="#1ab7ea"><path d="M23.977 6.416c-.105 2.338-1.739 5.543-4.894 9.609-3.268 4.247-6.026 6.37-8.29 6.37-1.409 0-2.578-1.294-3.553-3.881L5.322 11.4C4.603 8.816 3.834 7.522 3.01 7.522c-.179 0-.806.378-1.881 1.132L0 7.197c1.185-1.044 2.351-2.084 3.501-3.128C5.08 2.701 6.266 1.984 7.055 1.91c1.867-.18 3.016 1.1 3.447 3.838.465 2.953.789 4.789.971 5.507.539 2.45 1.131 3.674 1.776 3.674.502 0 1.256-.796 2.265-2.385 1.004-1.589 1.54-2.797 1.612-3.628.144-1.371-.395-2.061-1.614-2.061-.574 0-1.167.121-1.777.391 1.186-3.868 3.434-5.757 6.762-5.637 2.473.06 3.628 1.664 3.48 4.807z"/></svg>`,
+  soundcloud:`<svg viewBox="0 0 24 24" width="16" height="16" fill="#ff5500"><path d="M11.56 8.87V17h8.76c1.42-.01 2.54-1.12 2.54-2.51 0-1.39-1.12-2.51-2.54-2.51-.19 0-.37.02-.54.06-.01-.11-.02-.22-.02-.33 0-2.17 1.75-3.93 3.93-3.93.14 0 .28.01.41.02V8.87C23.57 6.83 22.17 5 20 5c-2.17 0-3.93 1.76-3.93 3.93 0 .17.01.33.03.5-.26-.06-.53-.09-.8-.09-.12 0-.24.01-.36.02V8.87C14.94 7.34 14 6 12.75 6c-1.24 0-2.19 1.34-2.19 2.87zm-2.19 0c0-.29-.03-.58-.08-.86-.31-1.79-1.84-3.15-3.7-3.15-2.07 0-3.75 1.68-3.75 3.75 0 .35.05.69.13 1.02C.84 10.03 0 11.14 0 12.43c0 1.63 1.32 2.94 2.94 2.94h6.43V8.87z"/></svg>`,
 };
 
 // Rotating placeholder
-const SAMPLES=['https://youtube.com/watch?v=dQw4w9WgXcQ','https://instagram.com/p/CxYz1234abc','https://tiktok.com/@creator/video/7123456789012345678','https://reddit.com/r/videos/comments/abc123/cool_video','https://x.com/user/status/1234567890123456789','https://pinterest.com/pin/1234567890123456789','https://facebook.com/watch?v=1234567890'];
+const SAMPLES=[
+  'https://youtube.com/watch?v=dQw4w9WgXcQ',
+  'https://tiktok.com/@creator/video/7123456789012345678',
+  'https://reddit.com/r/videos/comments/abc123/cool_video',
+  'https://x.com/user/status/1234567890123456789',
+  'https://pinterest.com/pin/1234567890123456789',
+  'https://vimeo.com/148751763',
+  'https://soundcloud.com/artist/track-name',
+];
 let sIdx=0;
 const inp=document.getElementById('urlInput');
 inp.placeholder=SAMPLES[0];
@@ -450,6 +466,21 @@ function render(){
       <button class="reset-btn" onclick="reset()">Download another</button>
     </div>`;return;
   }
+  if(state==='unavailable'){
+    el.innerHTML=`<div class="unavail-box">
+      <span class="unavail-icon">🚧</span>
+      <strong>${P[platId]?.name||'This platform'} downloads are temporarily unavailable</strong><br>
+      Meta (Instagram &amp; Facebook) blocks cloud server IPs. Support is planned for a future update.<br><br>
+      <span style="font-size:.75rem;color:var(--hint)">YouTube · TikTok · X · Reddit · Pinterest · Vimeo · SoundCloud all work fine.</span>
+    </div>
+    <button class="reset-btn" onclick="reset()" style="margin-top:.875rem">Try another platform</button>`;
+    return;
+  }
+  if(state==='fetcherror'){
+    el.innerHTML=`<div class="err-box">⚠ Couldn't fetch download options.<br><span style="font-size:.75rem;opacity:.7">${(window._lastFetchError||'').slice(0,120)}</span></div>
+    <button class="reset-btn" onclick="reset()" style="margin-top:.75rem">Try another link</button>`;
+    return;
+  }
 
   const p=P[platId];
   const tabs=['video','audio','photo'].filter(t=>p[t].length>0);
@@ -534,6 +565,7 @@ async function analyze(){
 
 // Standard resolutions to keep — filters out 27p/45p/90p/180p junk
 const STANDARD_HEIGHTS = [2160,1440,1080,720,480,360,240,144];
+const UNAVAILABLE_PLATFORMS = new Set(['instagram','facebook']);
 
 async function doAnalyze(){
   const url=inp.value.trim();
@@ -541,40 +573,49 @@ async function doAnalyze(){
 
   const id=detectPlatform(url);
   if(!id){
-    await new Promise(r=>setTimeout(r,800));
+    await new Promise(r=>setTimeout(r,700));
     state='error';render();return;
   }
   platId=id;
 
-  // Fetch preview + real formats simultaneously
+  // Show unavailable notice for Instagram/Facebook
+  if(UNAVAILABLE_PLATFORMS.has(id)){
+    await new Promise(r=>setTimeout(r,400));
+    state='unavailable';render();return;
+  }
+
   const [,formatsRes]=await Promise.all([
     fetchPreview(url,id),
     fetch(`${WORKER_URL}/api/formats?url=${encodeURIComponent(url)}`)
       .then(r=>r.json()).catch(()=>null),
-    new Promise(r=>setTimeout(r,900))
+    new Promise(r=>setTimeout(r,800))
   ]);
 
-  // Override hardcoded quality lists with real ones from backend
   if(formatsRes&&formatsRes.status==='ok'){
-    // Filter video to standard heights only
     const filtered=(formatsRes.video||[]).filter(q=>{
       const m=q.match(/^(\d+)p/);
-      return m&&STANDARD_HEIGHTS.includes(parseInt(m[1]));
+      return !m||STANDARD_HEIGHTS.includes(parseInt(m[1]));
     });
+    // Clone platform entry to avoid mutating global P
     P[id]={
       ...P[id],
       video: filtered,
       audio: formatsRes.audio||[],
       photo: formatsRes.photo||[],
     };
-    // Update preview title if backend returned one
     if(formatsRes.title&&previewCache[url]){
       previewCache[url].title=formatsRes.title;
     }
+  } else if(formatsRes&&formatsRes.error){
+    await new Promise(r=>setTimeout(r,200));
+    state='fetcherror';
+    platId=id;
+    window._lastFetchError=formatsRes.error;
+    render();return;
   }
 
   const pp=P[id];
-  activeTab=pp.video.length?'video':pp.photo.length?'photo':pp.audio.length?'audio':'video';
+  activeTab=pp.video.length?'video':pp.audio.length?'audio':pp.photo.length?'photo':'video';
   state='ready';render();
 }
 
@@ -658,9 +699,6 @@ async function startDownload(){
     document.getElementById('mainArea').appendChild(eb);
     return;
   }
-
-  turnstileToken = null;
-  setTimeout(()=>{state='done';render();}, 2000);
 }
 
 function reset(){inp.value='';document.getElementById('urlHint').textContent='';state='idle';selQ=null;platId=null;render();}
