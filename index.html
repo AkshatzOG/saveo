@@ -635,38 +635,80 @@ function switchTab(t){if(state==='downloading')return;activeTab=t;selQ=null;rend
 
 async function startDownload(){
   if(!selQ) return;
-
   const url=inp.value.trim();
 
-  state='downloading';
-  render();
+  // Re-verify if token was consumed
+  if(!turnstileToken){
+    const el=document.getElementById('mainArea');
+    if(!el.querySelector('.ts-gate')){
+      const gate=document.createElement('div');
+      gate.className='ts-gate';
+      gate.style.cssText='padding:.875rem 0;text-align:center;';
+      gate.innerHTML=`<p style="color:var(--muted);font-size:.78rem;margin-bottom:.75rem;">Re-verify to continue</p><div id="tsWrap" style="display:flex;justify-content:center;min-height:65px;"></div>`;
+      el.appendChild(gate);
+      tsWidgetId=turnstile.render('#tsWrap',{
+        sitekey:TURNSTILE_SITE_KEY,
+        callback:function(token){
+          turnstileToken=token;
+          if(tsWidgetId!==null){turnstile.remove(tsWidgetId);tsWidgetId=null;}
+          const g=document.querySelector('.ts-gate');
+          if(g)g.remove();
+          startDownload();
+        },
+        'error-callback':function(){
+          const g=document.querySelector('.ts-gate');
+          if(g)g.innerHTML='<p style="color:var(--red);font-size:.78rem;text-align:center;padding:.5rem">Verification failed — refresh and try again.</p>';
+        },
+        theme:document.documentElement.getAttribute('data-theme')||'dark'
+      });
+    }
+    return;
+  }
 
-  const dlUrl =
-    `${WORKER_URL}/api/download?url=${encodeURIComponent(url)}` +
-    `&quality=${encodeURIComponent(selQ)}` +
-    `&format=${activeTab}`;
+  state='downloading'; render();
+
+  const dlUrl=`${WORKER_URL}/api/download`
+    +`?url=${encodeURIComponent(url)}`
+    +`&quality=${encodeURIComponent(selQ)}`
+    +`&format=${encodeURIComponent(activeTab)}`
+    +`&ts=${encodeURIComponent(turnstileToken)}`;
+
+  turnstileToken=null; // consume immediately
 
   try{
-    const a = document.createElement('a');
-    a.href = data.url;
-    a.download = data.filename || `saveo-download`;
-    a.target = '_blank';  // ← add this — opens in new tab instead of navigating current page
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    const res=await fetch(dlUrl);
+    const data=await res.json();
 
-    setTimeout(()=>{
-      state='done';
-      render();
-    },2000);
+    if(!res.ok||data.error) throw new Error(data.error||'Download failed');
+
+    // Carousel / multi-photo
+    if(data.type==='picker'&&data.picker?.length){
+      data.picker.forEach((item,i)=>{
+        setTimeout(()=>{
+          const a=document.createElement('a');
+          a.href=item.url;
+          a.download=item.filename||`saveo-${i+1}.jpg`;
+          document.body.appendChild(a);a.click();document.body.removeChild(a);
+        },i*900);
+      });
+      setTimeout(()=>{state='done';render();},data.picker.length*900+500);
+      return;
+    }
+
+    // Single file
+    const a=document.createElement('a');
+    a.href=data.url;
+    a.download=data.filename||'saveo-download';
+    a.target='_blank';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+
+    setTimeout(()=>{state='done';render();},2000);
 
   }catch(err){
-    state='ready';
-    render();
-
+    state='ready';render();
     const eb=document.createElement('div');
-    eb.className='err-box';
-    eb.style.marginTop='.75rem';
+    eb.className='err-box';eb.style.marginTop='.75rem';
     eb.textContent='⚠ '+err.message;
-
     document.getElementById('mainArea').appendChild(eb);
   }
 }
