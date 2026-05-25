@@ -702,7 +702,7 @@ async function startDownload(){
     a.target='_blank';
     document.body.appendChild(a);a.click();document.body.removeChild(a);
 
-    setTimeout(()=>{state='done';render();},2000);
+    setTimeout(()=>{state='done';render();},3500);
 
   }catch(err){
     state='ready';render();
