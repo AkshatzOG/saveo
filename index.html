@@ -647,13 +647,11 @@ async function startDownload(){
     `&format=${activeTab}`;
 
   try{
-    const a=document.createElement('a');
-    a.href=dlUrl;
-    a.target='_blank';
-
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    const a = document.createElement('a');
+    a.href = data.url;
+    a.download = data.filename || `saveo-download`;
+    a.target = '_blank';  // ← add this — opens in new tab instead of navigating current page
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
 
     setTimeout(()=>{
       state='done';
