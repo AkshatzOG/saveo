@@ -299,14 +299,14 @@ const P = {
   video:['4K 2160p 60fps','4K 2160p','1080p 60fps','1080p','720p 60fps','720p','480p','360p','240p','144p'],
   audio:['320kbps','192kbps','128kbps'],
   photo:[],},
-  tiktok:      { name:'TikTok',      domains:['tiktok.com','vm.tiktok.com','vt.tiktok.com'],       video:[],audio:['MP3 Original'],photo:[],            },
-  twitter:     { name:'X (Twitter)', domains:['twitter.com','x.com','t.co'],                       video:[],audio:[],photo:['PNG Original','JPG High'],  },
-  reddit:      { name:'Reddit',      domains:['reddit.com','redd.it','v.redd.it'],                  video:[],audio:[],photo:['PNG Original','JPG High'],  },
+  tiktok:      { name:'TikTok',      domains:['tiktok.com','vm.tiktok.com','vt.tiktok.com'],       video:[],audio:['MP3 Original'],photo:[]           },
+  twitter:     { name:'X (Twitter)', domains:['twitter.com','x.com','t.co'],                       video:[],audio:[],photo:['PNG Original','JPG High']  },
+  reddit:      { name:'Reddit',      domains:['reddit.com','redd.it','v.redd.it'],                  video:[],audio:[],photo:['PNG Original','JPG High']  },
   pinterest:   { name:'Pinterest',   domains:['pinterest.com','pin.it','pinterest.co.uk','pinterest.com.au','pinterest.ca'], video:[],audio:[],photo:['PNG Original','JPG High','JPG Standard'] },
-  vimeo:       { name:'Vimeo',       domains:['vimeo.com'],                                         video:[],audio:[],photo:[],                          },
-  soundcloud:  { name:'SoundCloud',  domains:['soundcloud.com'],                                   video:[],audio:['320kbps','128kbps'],photo:[],        },
+  vimeo:       { name:'Vimeo',       domains:['vimeo.com'],                                         video:[],audio:[],photo:[]                         },
+  soundcloud:  { name:'SoundCloud',  domains:['soundcloud.com'],                                   video:[],audio:['320kbps','128kbps'],photo:[]       },
+  instagram:   { name:'Instagram',   domains:['instagram.com'],                                     video:[],audio:[],photo:[]        },
   // Unavailable on free cloud hosting — shown as service notice
-  instagram:   { name:'Instagram',   domains:['instagram.com'],                                     video:[],audio:[],photo:[], unavailable:true         },
   facebook:    { name:'Facebook',    domains:['facebook.com','fb.com','fb.watch','m.facebook.com'], video:[],audio:[],photo:[], unavailable:true         },
 };
 const PLAT_COLORS={youtube:'#FF0000',instagram:'#E1306C',tiktok:'#010101',facebook:'#1877F2',reddit:'#FF4500',pinterest:'#E60023',twitter:'#1DA1F2',vimeo:'#1ab7ea', soundcloud:'#ff5500'};
@@ -570,7 +570,7 @@ async function analyze(){
 
 // Standard resolutions to keep — filters out 27p/45p/90p/180p junk
 const STANDARD_HEIGHTS = [2160,1440,1080,720,480,360,240,144];
-const UNAVAILABLE_PLATFORMS = new Set(['instagram','facebook']);
+const UNAVAILABLE_PLATFORMS = new Set(['facebook']);
 
 async function doAnalyze(){
   const url=inp.value.trim();
