@@ -178,6 +178,159 @@ footer a:hover{color:var(--muted);}
   .nav-links{display:none;}
   h1{font-size:2rem;}
 }
+
+/* ── SUPPORT FLOAT ── */
+#supportFloat{
+  position:fixed;bottom:22px;right:22px;z-index:200;
+  width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(135deg,#f59e0b,#b91c1c);
+  color:#fff;font-size:17px;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 22px rgba(185,28,28,.4);
+  transition:transform .2s,box-shadow .2s;
+}
+#supportFloat:hover{transform:scale(1.08);box-shadow:0 10px 30px rgba(185,28,28,.5);}
+#supportFloat .sup-tip{
+  position:absolute;right:50px;top:50%;transform:translateY(-50%);
+  background:#1e293b;color:#fff;font-size:11px;font-weight:700;
+  padding:5px 10px;border-radius:8px;white-space:nowrap;display:none;
+  border:1px solid rgba(255,255,255,.1);pointer-events:none;
+}
+#supportFloat:hover .sup-tip{display:block;}
+
+/* ── SUPPORT SHEET ── */
+#supportSheet{
+  position:fixed;inset:0;z-index:500;
+  display:flex;align-items:flex-end;justify-content:center;
+  background:rgba(0,0,0,0);pointer-events:none;
+  transition:background .25s;
+}
+#supportSheet.open{background:rgba(0,0,0,.6);pointer-events:all;backdrop-filter:blur(6px);}
+#supportSheetInner{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:22px 22px 0 0;padding:24px 22px 36px;
+  width:100%;max-width:480px;
+  transform:translateY(100%);transition:transform .32s cubic-bezier(.32,1.2,.6,1);
+}
+#supportSheet.open #supportSheetInner{transform:translateY(0);}
+.sup-handle{width:38px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 18px;}
+.sup-emoji-row{text-align:center;font-size:30px;margin-bottom:8px;}
+.sup-title{font-size:15px;font-weight:800;color:var(--text);text-align:center;margin-bottom:5px;letter-spacing:-.03em;}
+.sup-sub{font-size:.8rem;color:var(--muted);text-align:center;margin-bottom:20px;line-height:1.65;padding:0 6px;}
+.sup-actions{display:flex;flex-direction:column;gap:9px;}
+.sup-btn{
+  display:flex;align-items:center;gap:12px;
+  padding:13px 16px;border-radius:13px;
+  text-decoration:none;transition:transform .18s,box-shadow .18s;
+  border:1px solid var(--border);
+}
+.sup-btn:hover{transform:translateY(-2px);}
+.sup-btn-icon{font-size:22px;flex-shrink:0;}
+.sup-btn-text{flex:1;}
+.sup-btn-title{font-size:.875rem;font-weight:700;color:var(--text);}
+.sup-btn-desc{font-size:.75rem;color:var(--muted);margin-top:1px;}
+.sup-btn-arrow{font-size:13px;color:var(--hint);}
+.sup-kofi{background:linear-gradient(135deg,rgba(255,94,91,.12),rgba(224,57,91,.06));border-color:rgba(255,94,91,.22);}
+.sup-kofi:hover{box-shadow:0 6px 22px rgba(255,94,91,.22);}
+.sup-linktree{background:var(--surface2);}
+.sup-linktree:hover{box-shadow:0 6px 22px rgba(255,255,255,.06);}
+.sup-close{
+  display:block;width:100%;margin-top:14px;padding:11px;
+  background:transparent;border:1px solid var(--border);
+  border-radius:11px;color:var(--muted);font-family:'Syne',sans-serif;
+  font-size:.775rem;font-weight:700;cursor:pointer;transition:all .2s;
+}
+.sup-close:hover{border-color:var(--violet);color:var(--text);}
+
+/* ── SUPPORT BANNER ── */
+#supportBanner{
+  position:fixed;bottom:0;left:0;right:0;z-index:300;
+  transform:translateY(100%);transition:transform .4s cubic-bezier(.32,1.2,.6,1);
+  display:flex;justify-content:center;pointer-events:none;
+}
+#supportBanner.visible{transform:translateY(0);pointer-events:all;}
+#supportBannerInner{
+  margin:0 14px 14px;
+  background:var(--surface);border:1px solid rgba(245,158,11,.3);
+  border-radius:16px;padding:14px 16px;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  box-shadow:0 8px 36px rgba(0,0,0,.4);max-width:520px;width:100%;
+  backdrop-filter:blur(16px);
+}
+.sb-emoji{font-size:26px;flex-shrink:0;}
+.sb-text{flex:1;min-width:130px;}
+.sb-text h4{font-size:.8125rem;font-weight:800;color:var(--text);margin:0 0 2px;letter-spacing:-.02em;}
+.sb-text p{font-size:.72rem;color:var(--muted);margin:0;line-height:1.5;}
+.sb-cta{
+  padding:9px 16px;background:linear-gradient(135deg,#f59e0b,#d97706);
+  border:none;border-radius:10px;color:#fff;font-family:'Syne',sans-serif;
+  font-size:.75rem;font-weight:800;cursor:pointer;white-space:nowrap;flex-shrink:0;
+  box-shadow:0 4px 14px rgba(245,158,11,.38);transition:all .2s;
+}
+.sb-cta:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(245,158,11,.48);}
+.sb-dismiss{
+  background:none;border:none;color:var(--hint);
+  font-size:15px;cursor:pointer;padding:4px;flex-shrink:0;transition:color .2s;
+}
+.sb-dismiss:hover{color:var(--muted);}
+
+/* ── DONATE SECTION (above footer) ── */
+.donate-section{
+  background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:3.5rem 1.5rem;transition:background .3s;
+}
+.donate-inner{max-width:660px;margin:0 auto;}
+.donate-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--violet-light);margin-bottom:.75rem;text-align:center;}
+.donate-title{text-align:center;font-size:clamp(1.25rem,2.5vw,1.6rem);font-weight:800;letter-spacing:-.04em;margin-bottom:.5rem;}
+.donate-sub{text-align:center;color:var(--muted);font-size:.8125rem;line-height:1.7;margin-bottom:2rem;}
+.donate-grid{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;}
+.donate-card-box{
+  flex:1;min-width:220px;max-width:300px;
+  background:var(--surface2);border:1px solid var(--border);border-radius:16px;
+  padding:1.5rem;text-align:center;transition:transform .2s,border-color .2s,box-shadow .2s;
+  text-decoration:none;display:block;
+}
+.donate-card-box:hover{transform:translateY(-3px);border-color:var(--violet);box-shadow:0 8px 28px rgba(124,58,237,.15);}
+.donate-card-icon{font-size:2rem;margin-bottom:.75rem;}
+.donate-card-title{font-size:.9375rem;font-weight:800;color:var(--text);margin-bottom:.375rem;letter-spacing:-.03em;}
+.donate-card-desc{color:var(--muted);font-size:.775rem;line-height:1.65;}
+.donate-card-btn{
+  display:inline-block;margin-top:1rem;padding:8px 18px;border-radius:9px;
+  font-family:'Syne',sans-serif;font-size:.775rem;font-weight:700;
+  color:#fff;text-decoration:none;transition:filter .2s;
+}
+.donate-card-btn:hover{filter:brightness(1.1);}
+.dc-kofi .donate-card-btn{background:#FF5E5B;}
+.dc-linktree .donate-card-btn{background:#43E660;color:#0a1a0a;}
+
+/* ── INLINE DONE-STATE DONATE ── */
+.done-donate{
+  margin-top:1.125rem;padding:1rem 1.125rem;
+  background:var(--surface2);border:1px solid var(--border);border-radius:13px;
+  display:flex;align-items:center;gap:.875rem;flex-wrap:wrap;text-align:left;
+}
+.done-donate-text{flex:1;min-width:130px;}
+.done-donate-text strong{display:block;font-size:.8125rem;font-weight:800;color:var(--text);margin-bottom:2px;}
+.done-donate-text span{font-size:.72rem;color:var(--muted);line-height:1.5;}
+.done-donate-btns{display:flex;gap:7px;flex-shrink:0;flex-wrap:wrap;}
+.done-donate-btn{
+  padding:7px 13px;border-radius:8px;font-family:'Syne',sans-serif;
+  font-size:.72rem;font-weight:800;text-decoration:none;transition:filter .2s,border-color .2s;
+  white-space:nowrap;
+}
+.ddb-kofi{background:#FF5E5B;color:#fff;}
+.ddb-kofi:hover{filter:brightness(1.1);}
+.ddb-links{background:var(--surface);border:1px solid var(--border);color:var(--text);}
+.ddb-links:hover{border-color:var(--violet);color:var(--violet-light);}
+
+@media(max-width:640px){
+  #supportFloat{bottom:16px;right:16px;width:38px;height:38px;font-size:15px;}
+  #supportBannerInner{margin:0 10px 10px;padding:12px 13px;}
+  .donate-card-box{min-width:100%;}
+  .done-donate{flex-direction:column;gap:.625rem;}
+  .done-donate-btns{width:100%;justify-content:center;}
+  .done-donate-btn{flex:1;text-align:center;}
+}
 </style>
 </head>
 <body>
@@ -270,6 +423,29 @@ footer a:hover{color:var(--muted);}
   </div>
 </div>
 
+<!-- ── DONATE SECTION ── -->
+<div class="donate-section">
+  <div class="donate-inner">
+    <div class="donate-label">Keep Saveo alive</div>
+    <div class="donate-title">Free, no ads, no signup — forever.</div>
+    <div class="donate-sub">Saveo is a solo project, hosted and built out of pocket. If it saved you time, a coffee goes a long way.</div>
+    <div class="donate-grid">
+      <a class="donate-card-box dc-kofi" href="https://ko-fi.com/nirvanayt" target="_blank">
+        <div class="donate-card-icon">☕</div>
+        <div class="donate-card-title">Buy us a Coffee</div>
+        <div class="donate-card-desc">Ko-fi — goes directly to hosting costs and dev time. Every cup counts.</div>
+        <span class="donate-card-btn">Support on Ko-fi</span>
+      </a>
+      <a class="donate-card-box dc-linktree" href="https://linktr.ee/nirvanaa" target="_blank">
+        <div class="donate-card-icon">🔗</div>
+        <div class="donate-card-title">All Our Links</div>
+        <div class="donate-card-desc">YouTube, Discord, Telegram, One Piece game and more — everything in one place.</div>
+        <span class="donate-card-btn">Open Linktree</span>
+      </a>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div class="footer-logo">
     <svg width="18" height="18" viewBox="0 0 32 32" fill="none">
@@ -283,6 +459,55 @@ footer a:hover{color:var(--muted);}
   Personal use only · Content belongs to original creators<br>
   <span style="margin-top:.5rem;display:block;"><a href="privacy.html" target="_blank" style="color:var(--cyan);text-decoration:underline;">Privacy</a></p></span>
 </footer>
+
+<!-- ── SUPPORT FLOAT BUTTON ── -->
+<button id="supportFloat" onclick="openSupportSheet()" title="Support Saveo">
+  ☕<span class="sup-tip">Support Saveo</span>
+</button>
+
+<!-- ── SUPPORT SHEET ── -->
+<div id="supportSheet" onclick="if(event.target===this)closeSupportSheet()">
+  <div id="supportSheetInner">
+    <div class="sup-handle"></div>
+    <div class="sup-emoji-row">☕⚡</div>
+    <div class="sup-title">Keep Saveo Running</div>
+    <div class="sup-sub">
+      Free, no ads, no signup — built and hosted solo. If Saveo saved you time, a coffee genuinely helps cover the costs. No pressure at all.
+    </div>
+    <div class="sup-actions">
+      <a class="sup-btn sup-kofi" href="https://ko-fi.com/nirvanayt" target="_blank">
+        <span class="sup-btn-icon">☕</span>
+        <span class="sup-btn-text">
+          <div class="sup-btn-title">Buy us a Coffee</div>
+          <div class="sup-btn-desc">Ko-fi — goes straight to hosting & dev time</div>
+        </span>
+        <span class="sup-btn-arrow">→</span>
+      </a>
+      <a class="sup-btn sup-linktree" href="https://linktr.ee/nirvanaa" target="_blank">
+        <span class="sup-btn-icon">🔗</span>
+        <span class="sup-btn-text">
+          <div class="sup-btn-title">All Our Links</div>
+          <div class="sup-btn-desc">YouTube, Discord, Telegram, One Piece game & more</div>
+        </span>
+        <span class="sup-btn-arrow">→</span>
+      </a>
+    </div>
+    <button class="sup-close" onclick="closeSupportSheet()">✕ Maybe Later</button>
+  </div>
+</div>
+
+<!-- ── SUPPORT BANNER ── -->
+<div id="supportBanner">
+  <div id="supportBannerInner">
+    <div class="sb-emoji">☕</div>
+    <div class="sb-text">
+      <h4>Saveo saved you a download?</h4>
+      <p>It's free & ad-free — a coffee helps keep it that way.</p>
+    </div>
+    <button class="sb-cta" onclick="supportBannerOpenSheet()">Take a Look</button>
+    <button class="sb-dismiss" onclick="dismissSupportBanner()" title="Dismiss">✕</button>
+  </div>
+</div>
 
 <script>
 // ─── CONFIG — paste your Worker URL here after deploying it ───────────────────
@@ -364,7 +589,6 @@ function detectPlatform(url){
 }
 
 // ─── PREVIEW ENGINE ───────────────────────────────────────────────────────────
-// Stores fetched preview data per URL
 const previewCache={};
 
 async function fetchPreview(url,pid){
@@ -374,13 +598,11 @@ async function fetchPreview(url,pid){
   if(pid==='youtube'){
     const m=url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
     if(m){
-      // Try maxres first, fallback to hqdefault
       result.thumb=`https://img.youtube.com/vi/${m[1]}/maxresdefault.jpg`;
       result.thumbFallback=`https://img.youtube.com/vi/${m[1]}/hqdefault.jpg`;
       result.hasRealThumb=true;
     }
   } else if(pid==='tiktok'||pid==='reddit'){
-    // These go through our Worker thumbnail endpoint (avoids CORS)
     try{
       if(WORKER_URL && WORKER_URL !== 'YOUR_WORKER_URL_HERE'){
         const res=await fetch(`${WORKER_URL}/api/thumbnail?url=${encodeURIComponent(url)}&platform=${pid}`);
@@ -430,7 +652,6 @@ function buildPreviewHTML(pid,previewData,url){
     </div>`;
   }
 
-  // Branded fallback card for Instagram, Facebook, Pinterest, Twitter + others
   return `<div class="preview-wrap">
     <div class="preview-brand" style="background:linear-gradient(135deg,${color}15,${color}05);">
       <div class="preview-brand-icon">${PLAT_EMOJI[pid]}</div>
@@ -469,6 +690,17 @@ function render(){
       <div class="done-title">Download complete!</div>
       <div class="done-sub">Check your Downloads folder.</div>
       <button class="reset-btn" onclick="reset()">Download another</button>
+      <div class="done-donate">
+        <div style="font-size:1.5rem;flex-shrink:0;">☕</div>
+        <div class="done-donate-text">
+          <strong>Saveo is free &amp; no-ads — kept alive solo.</strong>
+          <span>If it saved you time, a coffee means a lot.</span>
+        </div>
+        <div class="done-donate-btns">
+          <a class="done-donate-btn ddb-kofi" href="https://ko-fi.com/nirvanayt" target="_blank">Buy a Coffee</a>
+          <a class="done-donate-btn ddb-links" href="https://linktr.ee/nirvanaa" target="_blank">All Links</a>
+        </div>
+      </div>
     </div>`;return;
   }
   if(state==='unavailable'){
@@ -583,14 +815,11 @@ async function doAnalyze(){
   }
   platId=id;
 
-  // Show unavailable notice for Instagram/Facebook
   if(UNAVAILABLE_PLATFORMS.has(id)){
     await new Promise(r=>setTimeout(r,400));
     state='unavailable';render();return;
   }
 
-  // YouTube: skip slow HF formats call, use hardcoded qualities instantly
-  // Other platforms: fetch real formats from backend
   const formatsPromise = (id === 'youtube')
     ? Promise.resolve(null)
     : fetch(`${WORKER_URL}/api/formats?url=${encodeURIComponent(url)}`)
@@ -607,7 +836,6 @@ async function doAnalyze(){
       const m=q.match(/^(\d+)p/);
       return !m||STANDARD_HEIGHTS.includes(parseInt(m[1]));
     });
-    // Clone platform entry to avoid mutating global P
     P[id]={
       ...P[id],
       video: filtered,
@@ -637,7 +865,6 @@ async function startDownload(){
   if(!selQ) return;
   const url=inp.value.trim();
 
-  // Re-verify if token was consumed
   if(!turnstileToken){
     const el=document.getElementById('mainArea');
     if(!el.querySelector('.ts-gate')){
@@ -673,7 +900,7 @@ async function startDownload(){
     +`&format=${encodeURIComponent(activeTab)}`
     +`&ts=${encodeURIComponent(turnstileToken)}`;
 
-  turnstileToken=null; // consume immediately
+  turnstileToken=null;
 
   try{
     const res=await fetch(dlUrl);
@@ -681,7 +908,6 @@ async function startDownload(){
 
     if(!res.ok||data.error) throw new Error(data.error||'Download failed');
 
-    // Carousel / multi-photo
     if(data.type==='picker'&&data.picker?.length){
       data.picker.forEach((item,i)=>{
         setTimeout(()=>{
@@ -695,7 +921,6 @@ async function startDownload(){
       return;
     }
 
-    // Single file
     const a=document.createElement('a');
     a.href=data.url;
     a.download=data.filename||'saveo-download';
@@ -741,6 +966,29 @@ document.getElementById('faqList').innerHTML=FAQS.map((f,i)=>`
 function toggleFaq(i){document.getElementById('faq'+i).classList.toggle('open');}
 
 render();
+
+// ── SUPPORT SHEET ──
+function openSupportSheet(){ document.getElementById('supportSheet').classList.add('open'); }
+function closeSupportSheet(){ document.getElementById('supportSheet').classList.remove('open'); }
+
+// ── SUPPORT BANNER ──
+function maybeShowSupportBanner(){
+  const THREE_DAYS = 3 * 24 * 60 * 60 * 1000;
+  const last = parseInt(localStorage.getItem('saveoSupportBannerLast') || '0');
+  if(Date.now() - last < THREE_DAYS) return;
+  setTimeout(() => {
+    document.getElementById('supportBanner').classList.add('visible');
+  }, 40000); // show 40s after page load
+}
+function dismissSupportBanner(){
+  document.getElementById('supportBanner').classList.remove('visible');
+  localStorage.setItem('saveoSupportBannerLast', Date.now());
+}
+function supportBannerOpenSheet(){
+  dismissSupportBanner();
+  openSupportSheet();
+}
+maybeShowSupportBanner();
 </script>
 </body>
 </html>
