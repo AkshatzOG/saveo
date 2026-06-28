@@ -361,9 +361,9 @@ footer a:hover{color:var(--muted);}
 </nav>
 
 <section class="hero">
-  <div class="badge">⚡ Free · No Signup · 9 Platforms</div>
+  <div class="badge">⚡ Free · No Signup · 6 Platforms</div>
   <h1>Download anything,<br><em>from anywhere.</em></h1>
-  <p class="subtitle">YouTube, TikTok, Reddit, Pinterest, X, Vimeo, SoundCloud and more — paste any link, pick your quality. MP4 up to 4K, MP3, full-res photos.</p>
+  <p class="subtitle">TikTok, Reddit, Pinterest, X, Vimeo, SoundCloud and more — paste any link, pick your quality. MP4 up to 4K, MP3, full-res photos.</p>
   <div class="input-card">
     <div class="input-row">
       <input class="url-input" id="urlInput" autocomplete="off" spellcheck="false"/>
@@ -392,7 +392,7 @@ footer a:hover{color:var(--muted);}
 
 <section class="section" id="platforms" style="padding-top:0">
   <div class="sec-label">Supported</div>
-  <div class="sec-title">Seven platforms, every format</div>
+  <div class="sec-title">Six platforms, every format</div>
   <div class="plat-chips" id="platChips"></div>
   <div class="format-grid">
     <div class="format-card"><div class="format-icon">🎬</div><div class="format-t">Video — MP4</div><div class="format-d">Up to 4K 2160p 60fps. All resolutions: 1080p, 720p, 480p, 360p, 240p, 144p.</div></div>
@@ -551,7 +551,6 @@ const ICONS={
 
 // Rotating placeholder
 const SAMPLES=[
-  'https://youtube.com/watch?v=dQw4w9WgXcQ',
   'https://tiktok.com/@creator/video/7123456789012345678',
   'https://reddit.com/r/videos/comments/abc123/cool_video',
   'https://x.com/user/status/1234567890123456789',
@@ -705,15 +704,22 @@ function render(){
     </div>`;return;
   }
   if(state==='unavailable'){
-    el.innerHTML=`<div class="unavail-box">
-      <span class="unavail-icon">🚧</span>
-      <strong>${P[platId]?.name||'This platform'} downloads are temporarily unavailable</strong><br>
-      Meta (Instagram &amp; Facebook) blocks cloud server IPs. Support is planned for a future update.<br><br>
-      <span style="font-size:.75rem;color:var(--hint)">YouTube · TikTok · X · Reddit · Pinterest · Vimeo · SoundCloud all work fine.</span>
-    </div>
-    <button class="reset-btn" onclick="reset()" style="margin-top:.875rem">Try another platform</button>`;
-    return;
-  }
+  const isYT = platId === 'youtube';
+  const isIG = platId === 'instagram' || platId === 'facebook';
+  el.innerHTML=`<div class="unavail-box">
+    <span class="unavail-icon">🚧</span>
+    <strong>${P[platId]?.name||'This platform'} is currently unavailable</strong><br>
+    ${isYT
+      ? 'YouTube actively blocks downloads from cloud servers. We\'re working on a fix.'
+      : isIG
+      ? 'Instagram & Facebook block unauthenticated requests from cloud servers.'
+      : 'This platform is temporarily unavailable.'
+    }<br><br>
+    <span style="font-size:.75rem;color:var(--hint)">Working: TikTok · X · Reddit · Pinterest · Vimeo · SoundCloud</span>
+  </div>
+  <button class="reset-btn" onclick="reset()" style="margin-top:.875rem">Try another platform</button>`;
+  return;
+}
   if(state==='fetcherror'){
     el.innerHTML=`<div class="err-box">⚠ Couldn't fetch download options.<br><span style="font-size:.75rem;opacity:.7">${(window._lastFetchError||'').slice(0,120)}</span></div>
     <button class="reset-btn" onclick="reset()" style="margin-top:.75rem">Try another link</button>`;
@@ -803,7 +809,7 @@ async function analyze(){
 
 // Standard resolutions to keep — filters out 27p/45p/90p/180p junk
 const STANDARD_HEIGHTS = [2160,1440,1080,720,480,360,240,144];
-const UNAVAILABLE_PLATFORMS = new Set(['facebook']);
+const UNAVAILABLE_PLATFORMS = new Set(['facebook', 'instagram', 'youtube']);
 
 async function doAnalyze(){
   const url=inp.value.trim();
